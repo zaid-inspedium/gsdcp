@@ -7,13 +7,13 @@
     <div class="content-box">
       <div class="element-wrapper">
         <h6 class="element-header">
-          KCP Numbers
+          Modules
         </h6>
         <div class="element-box">
           <h5 class="form-header">
-            KCP Numbers - List
+            Modules - List
           </h5>
-        <a href="{{ route('KCPNumber.create') }}" class="btn btn-lg btn-success">
+        <a href="{{ route('Modules.create') }}" class="btn btn-lg btn-success">
 			   <i class="fa fa-plus-circle"> New</i>
 		    </a>
         @if ($message = Session::get('success'))
@@ -34,58 +34,37 @@
             	<thead>
             		<tr>
             			<th style="width:  4.33%">S.no</th>
-            			<th>Start Range</th>
-            			<th>End Range</th>
-                  <th>Last Issued No</th>
-                  <th>Issued Date</th>
-                  <th>Created</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+            			<th>Module</th>
+            			<th>Module Title</th>
+                        
+                        <th>Actions</th>
             		</tr>
             	</thead>
             	<tfoot>
             		<tr>
             			<th style="width:  4.33%">S.no</th>
-            			<th>Start Range</th>
-                  <th>End Range</th>
-                  <th>Last Issued No</th>
-                  <th>Issued Date</th>
-                  <th>Created</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+            			<th>Module</th>
+            			<th>Module Title</th>
+                        
+                        <th>Actions</th>
             		</tr>
             	</tfoot>
             	<tbody>
             		<?php
       					 $i = 1;
       					?>
-					    @foreach ($kcp_number as $key => $kcp)
+					    @foreach ($modules as $key => $mod)
                 	<tr>
                     <td>{{ $i++ }}</td>
-                    <td>{{ $kcp->start_range }}</td>
-                    <td>{{ $kcp->end_range }}</td>
-                    <td>{{ $kcp->last_issued_no }}</td>
-                    <td>{{ $issue_date=date('d-m-Y', strtotime($kcp->created_at)) }}</td>
-                    <td>{{ $created=date('d-m-Y h:i:s', strtotime($kcp->created_at)) }}</td>
-                    <td><span class="badge badge-secondary">{{ $kcp->status }}</span></td>
-
-                  
-
-
-                      <!-- <div class="btn-group d-inline-block">
-        						  <a href="{{ route('KCPNumber.edit',$kcp->id) }}" class="btn btn-primary" data-toggle="tooltip" data-placement="top"
-                          title="Edit">
-        						    <i class="fa fa-pencil"></i>
-        						  </a>
-                      <a><button class="btn btn-danger" onclick="deleteData({{$kcp->id}})" type="submit" data-id="{{$kcp->id}}" data-toggle="tooltip" data-placement="top"
-                          title="Delete"><i class="fa fa-trash-o"></i></button></a>
-        					  </div> -->
+                    <td>{{ $mod->name }}</td>
+                    <td>{{ $mod->module_title }}</td>
+        
                     <td class="row-actions">
-                      <a href="{{ route('KCPNumber.edit',$kcp->id) }}" data-toggle="tooltip" data-placement="top"
+                      <a href="{{ route('Modules.edit',$mod->id) }}" data-toggle="tooltip" data-placement="top"
                           title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
 
 
-                          {!! Form::open(['method' => 'DELETE','route' => ['KCPNumber.destroy', $kcp->id],'style'=>'display:inline']) !!}
+                          {!! Form::open(['method' => 'DELETE','route' => ['Modules.destroy', $mod->id],'style'=>'display:inline']) !!}
                           {{ Form::button('<i class="os-icon os-icon-ui-15"></i>', ['type' => 'submit', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => 'Delete'] )  }}
                           {!! Form::close() !!}
 

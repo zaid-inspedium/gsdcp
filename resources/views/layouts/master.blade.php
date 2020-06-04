@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Admin Dashboard HTML Template</title>
+    <title>GSDCP</title>
     <meta charset="utf-8">
     <meta content="ie=edge" http-equiv="x-ua-compatible">
-    <meta content="template language" name="keywords">
-    <meta content="Tamerlan Soziev" name="author">
-    <meta content="Admin dashboard html template" name="description">
+    <meta content="German Shepard Dog, Breed, GSDCP, Litter Registration, Kennel Registration, Dogs" name="keywords">
+    <meta content="Inspedium Corp." name="author">
+    <meta content="German Shephard Dog Club Pakistan" name="description">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="{{asset('assets/favicon.png')}}" rel="shortcut icon">
     <link href="{{asset('assets/apple-touch-icon.png')}}" rel="apple-touch-icon">
@@ -130,7 +130,7 @@
               <div class="close-search-suggestions">
                 <i class="os-icon os-icon-x"></i>
               </div>
-            </input>
+            
           </div>
           <div class="search-suggestions-group">
             <div class="ssg-header">
@@ -253,7 +253,7 @@
         -------------------->
         <div class="menu-mobile menu-activated-on-click color-scheme-dark">
           <div class="mm-logo-buttons-w">
-            <a class="mm-logo" href="index.html"><img src="{{asset('assets/img/logo.png')}}"><span>Clean Admin</span></a>
+            <a class="mm-logo" href="index.html"><img src="{{asset('assets/img/logo/left-logo.png')}}"><span>GSDCP</span></a>
             <div class="mm-buttons">
               <div class="content-panel-open">
                 <div class="os-icon os-icon-grid-circles"></div>
@@ -270,7 +270,7 @@
               </div>
               <div class="logged-user-info-w">
                 <div class="logged-user-name">
-                  Maria Gomez
+                  {{ Auth::user()->first_name }}
                 </div>
                 <div class="logged-user-role">
                   Administrator
@@ -648,10 +648,8 @@
         <div class="menu-w color-scheme-light color-style-transparent menu-position-side menu-side-left menu-layout-compact sub-menu-style-over sub-menu-color-bright selected-menu-color-light menu-activated-on-hover menu-has-selected-link">
           <div class="logo-w">
             <a class="logo" href="index.html">
-              <div class="logo-element"></div>
-              <div class="logo-label">
-                Clean Admin
-              </div>
+              <img src="{{asset('assets/img/logo/left-logo.png')}}" style="height:70px; width:150px;"/>
+              
             </a>
           </div>
           <div class="logged-user-w avatar-inline">
@@ -661,242 +659,88 @@
               </div>
               <div class="logged-user-info-w">
                 <div class="logged-user-name">
-                  Maria Gomez
+                  {{ Auth::user()->first_name }}
                 </div>
                 <div class="logged-user-role">
                   Administrator
                 </div>
               </div>
-              <div class="logged-user-toggler-arrow">
-                <div class="os-icon os-icon-chevron-down"></div>
-              </div>
-              <div class="logged-user-menu color-style-bright">
-                <div class="logged-user-avatar-info">
-                  <div class="avatar-w">
-                    <img alt="" src="{{asset('assets/img/avatar1.jpg')}}">
-                  </div>
-                  <div class="logged-user-info-w">
-                    <div class="logged-user-name">
-                      Maria Gomez
-                    </div>
-                    <div class="logged-user-role">
-                      Administrator
-                    </div>
-                  </div>
-                </div>
-                <div class="bg-icon">
-                  <i class="os-icon os-icon-wallet-loaded"></i>
-                </div>
-                <ul>
-                  <li>
-                    <a href="apps_email.html"><i class="os-icon os-icon-mail-01"></i><span>Incoming Mail</span></a>
-                  </li>
-                  <li>
-                    <a href="users_profile_big.html"><i class="os-icon os-icon-user-male-circle2"></i><span>Profile Details</span></a>
-                  </li>
-                  <li>
-                    <a href="users_profile_small.html"><i class="os-icon os-icon-coins-4"></i><span>Billing Details</span></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="os-icon os-icon-others-43"></i><span>Notifications</span></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="os-icon os-icon-signs-11"></i><span>Logout</span></a>
-                  </li>
-                </ul>
-              </div>
+        
             </div>
           </div>
-          <div class="menu-actions">
-            <!--------------------
-            START - Messages Link in secondary top menu
-            -------------------->
-            <div class="messages-notifications os-dropdown-trigger os-dropdown-position-right">
-              <i class="os-icon os-icon-mail-14"></i>
-              <div class="new-messages-count">
-                12
-              </div>
-              <div class="os-dropdown light message-list">
-                <ul>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar1.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          John Mayers
-                        </h6>
-                        <h6 class="message-title">
-                          Account Update
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar2.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          Phil Jones
-                        </h6>
-                        <h6 class="message-title">
-                          Secutiry Updates
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar3.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          Bekky Simpson
-                        </h6>
-                        <h6 class="message-title">
-                          Vacation Rentals
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar4.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          Alice Priskon
-                        </h6>
-                        <h6 class="message-title">
-                          Payment Confirmation
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <!--------------------
-            END - Messages Link in secondary top menu
-            --------------------><!--------------------
-            START - Settings Link in secondary top menu
-            -------------------->
-            <div class="top-icon top-settings os-dropdown-trigger os-dropdown-position-right">
-              <i class="os-icon os-icon-ui-46"></i>
-              <div class="os-dropdown">
-                <div class="icon-w">
-                  <i class="os-icon os-icon-ui-46"></i>
-                </div>
-                <ul>
-                  <li>
-                    <a href="users_profile_small.html"><i class="os-icon os-icon-ui-49"></i><span>Profile Settings</span></a>
-                  </li>
-                  <li>
-                    <a href="users_profile_small.html"><i class="os-icon os-icon-grid-10"></i><span>Billing Info</span></a>
-                  </li>
-                  <li>
-                    <a href="users_profile_small.html"><i class="os-icon os-icon-ui-44"></i><span>My Invoices</span></a>
-                  </li>
-                  <li>
-                    <a href="users_profile_small.html"><i class="os-icon os-icon-ui-15"></i><span>Cancel Account</span></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <!--------------------
-            END - Settings Link in secondary top menu
-            --------------------><!--------------------
-            START - Messages Link in secondary top menu
-            -------------------->
-            <div class="messages-notifications os-dropdown-trigger os-dropdown-position-right">
-              <i class="os-icon os-icon-zap"></i>
-              <div class="new-messages-count">
-                4
-              </div>
-              <div class="os-dropdown light message-list">
-                <div class="icon-w">
-                  <i class="os-icon os-icon-zap"></i>
-                </div>
-                <ul>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar1.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          John Mayers
-                        </h6>
-                        <h6 class="message-title">
-                          Account Update
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar2.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          Phil Jones
-                        </h6>
-                        <h6 class="message-title">
-                          Secutiry Updates
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar3.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          Bekky Simpson
-                        </h6>
-                        <h6 class="message-title">
-                          Vacation Rentals
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <div class="user-avatar-w">
-                        <img alt="" src="{{asset('assets/img/avatar4.jpg')}}">
-                      </div>
-                      <div class="message-content">
-                        <h6 class="message-from">
-                          Alice Priskon
-                        </h6>
-                        <h6 class="message-title">
-                          Payment Confirmation
-                        </h6>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <!--------------------
-            END - Messages Link in secondary top menu
-            -------------------->
-          </div>
-          <div class="element-search autosuggest-search-activator">
-            <input placeholder="Start typing to search..." type="text">
-          </div>
+          
           <h1 class="menu-page-header">
             Page Header
           </h1>
           <ul class="main-menu">
+            <li class="sub-header">
+              <span>Menu</span>
+            </li>
+            <li class="selected">
+              <a href="/">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Dashboard</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/Dogs">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Dogs</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/Member-Management">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Member Registration</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/User-types">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>User Types</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/roles">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Roles</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/Modules">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Modules</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/Permission">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Module Actions</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/KCPNumber">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>KCP Numbers</span></a>
+            </li>
+
+            {{-- Previous html template menu --}}
             <li class="sub-header">
               <span>Layouts</span>
             </li>
@@ -1356,17 +1200,7 @@
               </div>
             </li>
           </ul>
-          <div class="side-menu-magic">
-            <h4>
-              Light Admin
-            </h4>
-            <p>
-              Clean Bootstrap 4 Template
-            </p>
-            <div class="btn-w">
-              <a class="btn btn-white btn-rounded" href="#" target="_blank">Purchase Now</a>
-            </div>
-          </div>
+       
         </div>
         <!--------------------
         END - Main Menu
@@ -1383,106 +1217,7 @@
               <div class="element-search autosuggest-search-activator">
                 <input placeholder="Start typing to search..." type="text">
               </div>
-              <!--------------------
-              START - Messages Link in secondary top menu
-              -------------------->
-              <div class="messages-notifications os-dropdown-trigger os-dropdown-position-left">
-                <i class="os-icon os-icon-mail-14"></i>
-                <div class="new-messages-count">
-                  12
-                </div>
-                <div class="os-dropdown light message-list">
-                  <ul>
-                    <li>
-                      <a href="#">
-                        <div class="user-avatar-w">
-                          <img alt="" src="{{asset('assets/img/avatar1.jpg')}}">
-                        </div>
-                        <div class="message-content">
-                          <h6 class="message-from">
-                            John Mayers
-                          </h6>
-                          <h6 class="message-title">
-                            Account Update
-                          </h6>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <div class="user-avatar-w">
-                          <img alt="" src="{{asset('assets/img/avatar2.jpg')}}">
-                        </div>
-                        <div class="message-content">
-                          <h6 class="message-from">
-                            Phil Jones
-                          </h6>
-                          <h6 class="message-title">
-                            Secutiry Updates
-                          </h6>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <div class="user-avatar-w">
-                          <img alt="" src="{{asset('assets/img/avatar3.jpg')}}">
-                        </div>
-                        <div class="message-content">
-                          <h6 class="message-from">
-                            Bekky Simpson
-                          </h6>
-                          <h6 class="message-title">
-                            Vacation Rentals
-                          </h6>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <div class="user-avatar-w">
-                          <img alt="" src="{{asset('assets/img/avatar4.jpg')}}">
-                        </div>
-                        <div class="message-content">
-                          <h6 class="message-from">
-                            Alice Priskon
-                          </h6>
-                          <h6 class="message-title">
-                            Payment Confirmation
-                          </h6>
-                        </div>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <!--------------------
-              END - Messages Link in secondary top menu
-              --------------------><!--------------------
-              START - Settings Link in secondary top menu
-              -------------------->
-              <div class="top-icon top-settings os-dropdown-trigger os-dropdown-position-left">
-                <i class="os-icon os-icon-ui-46"></i>
-                <div class="os-dropdown">
-                  <div class="icon-w">
-                    <i class="os-icon os-icon-ui-46"></i>
-                  </div>
-                  <ul>
-                    <li>
-                      <a href="users_profile_small.html"><i class="os-icon os-icon-ui-49"></i><span>Profile Settings</span></a>
-                    </li>
-                    <li>
-                      <a href="users_profile_small.html"><i class="os-icon os-icon-grid-10"></i><span>Billing Info</span></a>
-                    </li>
-                    <li>
-                      <a href="users_profile_small.html"><i class="os-icon os-icon-ui-44"></i><span>My Invoices</span></a>
-                    </li>
-                    <li>
-                      <a href="users_profile_small.html"><i class="os-icon os-icon-ui-15"></i><span>Cancel Account</span></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+          
               <!--------------------
               END - Settings Link in secondary top menu
               --------------------><!--------------------
@@ -1500,7 +1235,7 @@
                       </div>
                       <div class="logged-user-info-w">
                         <div class="logged-user-name">
-                          Maria Gomez
+                          {{ Auth::user()->first_name }}
                         </div>
                         <div class="logged-user-role">
                           Administrator
@@ -1520,11 +1255,18 @@
                       <li>
                         <a href="users_profile_small.html"><i class="os-icon os-icon-coins-4"></i><span>Billing Details</span></a>
                       </li>
-                      <li>
+                      {{-- <li>
                         <a href="#"><i class="os-icon os-icon-others-43"></i><span>Notifications</span></a>
-                      </li>
+                      </li> --}}
                       <li>
-                        <a href="#"><i class="os-icon os-icon-signs-11"></i><span>Logout</span></a>
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                           onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                          @csrf
+                      </form>
                       </li>
                     </ul>
                   </div>

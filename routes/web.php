@@ -13,17 +13,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/dogs', function () {
-    return view('dogs/add');
-});
+// Route::get('/', function () {
+//     return view('dashboard/index');
+// });
 
-Route::resource('user_types','UserTypesController');
+Route::resource('User-types','UserTypesController');
 Route::resource('KCPNumber','KCPNumbersController');
-Route::get('/destroy/{id}','KCPNumbersController@destroy');
+Route::resource('Dogs','DogsController');
+Route::resource('Permission','PermissionController');
+Route::resource('Modules','ModulesController');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/dashboard', 'HomeController@index')->name('home');
+
 
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
