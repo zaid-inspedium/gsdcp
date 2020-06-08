@@ -1,23 +1,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @extends('layouts.master')
 @section('content')
-  <!--------------------
-          START - Breadcrumbs
-          -------------------->
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="index.html">Home</a>
-        </li>
-        <li class="breadcrumb-item">
-          <a href="index.html">Products</a>
-        </li>
-        <li class="breadcrumb-item">
-          <span>Laptop with retina screen</span>
-        </li>
-      </ul>
-      <!--------------------
-      END - Breadcrumbs
-      -------------------->
+  
       <div class="content-i">
             <div class="content-box"><div class="row">
   <div class="col-lg-12">
@@ -26,26 +10,28 @@
         Kennels - Form
       </h6>
       <div class="element-box">
-        <form>
+        <form action="{{ route('Kennels.store') }}" method="POST" id="formValidate">
+          @csrf
           <span class="badge badge-important pull-right" style="color:white;background-color: red;">Kennels Registration Fee: 0</span>
           <br>
           <legend><span>Kennel Entry</span></legend>
           <div class="form-group">
-            <label for="">Owner<span class="req" style="color:red;">*</span></label><select class="form-control" id="owner"
-            name="owner">
+            <label for="">Owner<span class="req" style="color:red;">*</span></label>
+
+
+          <select class="form-control" id="owner" name="owner_id">
               <option value="0">
                 Select State
               </option>
-              <option value="1">
-                One
-              </option>
-              <option value="2">
-                Two
-              </option>
+              @foreach($owners as $owner)
+                <option value="{{ $owner->id }}">
+                  {{ $owner->first_name }} ({{ $owner->email }})
+                </option>
+              @endforeach
             </select>
           </div>
           <div class="form-group">
-            <label for="">Kennel Name <span class="req" style="color:red;">*</span></label><input id="kennel" name="kennel" class="form-control" placeholder="Kennel" type="text">
+            <label for="">Kennel Name <span class="req" style="color:red;">*</span></label><input id="kennel" name="kennel_name" class="form-control" placeholder="Kennel" type="text">
           </div>
           <div class="row">
             <div class="col-sm-6">
@@ -61,12 +47,28 @@
           </div>
           <br>
           <div class="form-group">
-                <label><strong>Old Record:</strong> &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<input class="form-check-input" name="old_record" type="radio" value=""></label>
+                <label>
+                  <strong>Old Record:</strong> &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                  <input class="form-check-input" name="old_record" type="checkbox" value="1">
+                </label>
           </div>
           <br>
-          <div class="form-group" id="Contact_name">
-            <label for="">Contact Name <span class="req" style="color:red;">*</span></label></label><input id="contact_name" name="contact_name" class="form-control" placeholder="Contact Name" type="text">
+          <legend><span>User Entry</span></legend>
+          <div class="row">
+            <div class="col-sm-6" id="first_name">
+              <div class="form-group">
+                <label for="">First Name </label>
+                <input id="first_name" name="first_name" class="form-control" placeholder="First Name" type="text">
+              </div>
+            </div>
+            <div class="col-sm-6" id="last_name">
+              <div class="form-group">
+                <label for="">Last Name </label>
+                <input id="last_name" name="last_name" class="form-control" placeholder="Last Name" type="text">
+              </div>
+            </div>
           </div>
+
           <div class="form-group" id="Img">
             <label for="img">Logo</label>
             <input class="form-control" type="file" id="img" name="img" accept="image/png, image/jpeg, image/jpg">
@@ -146,7 +148,8 @@
       $(document).ready(function(){
         $("select").change(function(){
         var x = document.getElementById("owner").value;
-        var y = document.getElementById("Contact_name");
+        var y = document.getElementById("first_name");
+        var lname = document.getElementById("last_name");
         var a = document.getElementById("Img");
         var b = document.getElementById("Cnic");
         var c = document.getElementById("Email");
@@ -156,8 +159,9 @@
         var z = document.getElementById("count");
         var h = document.getElementById("zipp");
         var u = document.getElementById("login_details");
-        if(x == 1 || x == 2){
+        if(x != 0){
           y.style.display = "";
+          lname.style.display = "";
           a.style.display = "";
           b.style.display = "";
           c.style.display = "";
@@ -167,8 +171,9 @@
           z.style.display = "";
           h.style.display = "";
           u.style.display = "";
-        if (y.style.display === "none" && a.style.display === "none" && b.style.display === "none" && c.style.display === "none" && d.style.display === "none" && e.style.display === "none" && f.style.display === "none" && z.style.display === "none" && h.style.display === "none" && u.style.display === "none") {
+        if (y.style.display === "none" && lname.style.display === "none" && a.style.display === "none" && b.style.display === "none" && c.style.display === "none" && d.style.display === "none" && e.style.display === "none" && f.style.display === "none" && z.style.display === "none" && h.style.display === "none" && u.style.display === "none") {
           y.style.display = "block";
+          lname.style.display = "block";
           a.style.display = "block";
           b.style.display = "block";
           c.style.display = "block";
@@ -180,6 +185,7 @@
           u.style.display = "block";
         } else {
           y.style.display = "none";
+          lname.style.display = "none";
           a.style.display = "none";
           b.style.display = "none";
           c.style.display = "none";
@@ -190,9 +196,9 @@
           h.style.display = "none";
           u.style.display = "none";
         }
-      }
-      if(x == 0){
-        y.style.display = "";
+      }else{
+          y.style.display = "";
+          lname.style.display = "";
           a.style.display = "";
           b.style.display = "";
           c.style.display = "";
@@ -202,8 +208,8 @@
           z.style.display = "";
           h.style.display = "";
           u.style.display = "";
-          //console.log(x);
       }
+      
       });
       });
       </script> 

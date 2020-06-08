@@ -43,7 +43,6 @@ class KCPNumbersController extends Controller
         KCPNumbers::create($request->all());
         $kcp_number = KCPNumbers::select('id')->latest()->first();
         $previous = KCPNumbers::where('id', '<', $kcp_number->id)->max('id');
-        // echo "<script>alert('$previous');</script>";
         $kcp = KCPNumbers::findorFail($previous);
         $kcp->status = "End";
         $kcp->save();

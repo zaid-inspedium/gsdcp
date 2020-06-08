@@ -693,20 +693,20 @@
             </li>
 
             <li class="selected">
-              <a href="/Member-Management">
+              <a href="/users">
                 <div class="icon-w">
                   <div class="os-icon os-icon-layout"></div>
                 </div>
                 <span>Member Registration</span></a>
             </li>
 
-            <li class="selected">
+            {{-- <li class="selected">
               <a href="/User-types">
                 <div class="icon-w">
                   <div class="os-icon os-icon-layout"></div>
                 </div>
                 <span>User Types</span></a>
-            </li>
+            </li> --}}
 
             <li class="selected">
               <a href="/roles">
@@ -738,6 +738,16 @@
                   <div class="os-icon os-icon-layout"></div>
                 </div>
                 <span>KCP Numbers</span></a>
+            </li>
+
+            
+
+            <li class="selected">
+              <a href="/Kennels">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Kennels</span></a>
             </li>
 
             {{-- Previous html template menu --}}

@@ -22,8 +22,9 @@ Route::resource('KCPNumber','KCPNumbersController');
 Route::resource('Dogs','DogsController');
 Route::resource('Permission','PermissionController');
 Route::resource('Modules','ModulesController');
-Route::get('/Kennels', function(){
-    return view('members_files/member_files');
+
+Route::get('/members', function(){
+    return view('member_account/member_account');
 });
 
 Auth::routes();
@@ -36,4 +37,5 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
     Route::resource('products','ProductController');
+    Route::resource('Kennels','KennelController');
 });
