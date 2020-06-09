@@ -38,4 +38,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function user_city()
+    {
+        return $this->belongsTo('App\Cities','city','id'); 
+    }
+
+    public function user_country()
+    {
+        return $this->belongsTo('App\Countries','country','idCountry'); 
+    }
+
+    // public function user_role()
+    // {
+    //     return $this->belongsTo('App\Role','role_id','id'); 
+    // }
 }

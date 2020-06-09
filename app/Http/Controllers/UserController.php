@@ -7,6 +7,9 @@ use App\User;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
+use App\Countries;
+use App\Cities;
+use Auth;
 
 class UserController extends Controller
 {
@@ -17,9 +20,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id','DESC')->paginate(5);
+        $data = User::orderBy('id','DESC')->paginate(20);
         return view('users.index',compact('data'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+            ->with('i', ($request->input('page', 1) - 1) * 20);
     }
 
     /**
@@ -29,8 +32,13 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        $roles = Role::select('name')
+                        ->get();
+        $countries = Countries::select('idCountry','countryName')
+                        ->get();
+        $cities = Cities::select('id','city')
+                        ->get();
+        return view('users.create',compact('roles','countries','cities'));
     }
 
     /**
@@ -44,16 +52,37 @@ class UserController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|same:confirm-password',
+            'password' => 'required',
             'roles' => 'required'
         ]);
-
 
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
+        $imageName = time().'.'.request()->photo->getClientOriginalExtension();
+        request()->photo->move(public_path('members\profile_pic'), $imageName);
 
-        $user = User::create($input);
+        $user = new User;
+        $user->membership_no = $request->membership_no; 
+        $user->username = $request->username; 
+        $user->password =  Hash::make($request->password);
+        $user->first_name = $request->first_name; 
+        $user->last_name = $request->last_name; 
+        $user->photo = $imageName;
+        $user->membership_no = $request->membership_no; 
+        $user->cnic = $request->cnic; 
+        $user->email = $request->email; 
+        $user->phone = $request->phone; 
+        $user->address = $request->address; 
+        $user->city = $request->city; 
+        $user->country = $request->country; 
+        $user->zip_code = $request->zip_code; 
+        $user->created_by = Auth::user()->id;
+        $user->newsletter = $request->newsletter; 
+        $user->old_record = ($request->old_record == '') ? 0 : 1; 
+        $user->save();
+
+        //$user = User::create($input);
         $user->assignRole($request->input('roles'));
 
 
@@ -73,6 +102,12 @@ class UserController extends Controller
         return view('users.show',compact('user'));
     }
 
+    public function member_files($id)
+    {
+        $user = User::find($id);
+        return view('users.member_files',compact('user'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -83,9 +118,13 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
+        $countries = Countries::select('idCountry','countryName')
+                        ->get();
+        $cities = Cities::select('id','city')
+                        ->get();
         $userRole = $user->roles->pluck('first_name','first_name')->all();
 
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit',compact('user','roles','userRole','countries','cities'));
     }
 
     /**

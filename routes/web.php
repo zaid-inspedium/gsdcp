@@ -27,11 +27,16 @@ Route::get('/members', function(){
     return view('member_account/member_account');
 });
 
+Route::get('/new_user', function(){
+    return view('users/users/add');
+});
+
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'HomeController@index')->name('home');
-
+Route::get('Member-Files/{id}','UserController@member_files');
+Route::get('Member-Account/{id}','AccountsController@member_account');
 
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
