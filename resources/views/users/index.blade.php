@@ -16,9 +16,18 @@
 
               <div class="element-wrapper">
                 <h6 class="element-header">
-                  Users/Members - List
+                  Users/Members
                 </h6>
                 <div class="element-box">
+                  <h5 class="form-header">
+                    Users/Members - List
+                    <div style="float: right; position: inherit;">
+                      <a href="{{ route('users.create') }}" class="btn btn-lg btn-success">
+                        <i class="fa fa-plus-circle"> New</i>
+                       </a>
+                    </div>
+                  </h5>
+
                   <div class="table-responsive">
                     <table id="dataTable1" width="100%" class="table table-striped table-lightfont">
                       <thead>

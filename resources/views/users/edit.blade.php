@@ -1,23 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-  <!--------------------
-          START - Breadcrumbs
-          -------------------->
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="index.html">Home</a>
-        </li>
-        <li class="breadcrumb-item">
-          <a href="index.html">Products</a>
-        </li>
-        <li class="breadcrumb-item">
-          <span>Laptop with retina screen</span>
-        </li>
-      </ul>
-      <!--------------------
-      END - Breadcrumbs
-      -------------------->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
       <div class="content-i">
       <div class="content-box">
         <div class="row">
@@ -27,7 +11,9 @@
         Users/Members
       </h6>
       <div class="element-box">
-        <form>
+        <form action="{{ route('users.update',$user->id) }}" method="POST" id="formValidate">
+          @csrf
+          @method('PUT')
           <legend><span>User Edit</span></legend>
           <div class="form-group">
             <label for="">First Name</label><input class="form-control" name="first_name" id="first_name" placeholder="Enter First Name" type="text"
@@ -45,9 +31,37 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-           <label for="photo">Photo</label>
-                <input class="form-control" type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/jpg">
+
+          <div class="row">
+            @if($user->photo == "")
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="photo">Photo</label>
+                     <input class="form-control" type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/jpg">
+               </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="photo_preview">Preview</label>
+                <img id="blah" src="#" alt="your image" height="120" width="100" />
+               </div>
+            </div>
+            @else
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="photo">Photo</label>
+                     <input class="form-control" type="file" id="photo" name="photo" value="{{ $user->photo }}" accept="image/png, image/jpeg, image/jpg">
+                     <input type="hidden" value="{{ $user->photo }}" name="old_photo" />
+               </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="photo_preview">Preview</label>
+                
+              <img id="blah" src="{{ URL::asset("members/profile_pic/{$user->photo}") }}" alt="{{ $user->photo }}" height="120" width="100" />
+               </div>
+            </div>
+            @endif
           </div>
           <div class="form-group">
             <label for="">Email</label><input class="form-control" name="email" id="email" placeholder="Email" type="email" value="{{ $user->email }}">
@@ -97,13 +111,18 @@
               </div>
             </div>
             <br>
-          <div class="form-group">
-                <label><strong>NewsLetter</strong> &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<input class="form-check-input" name="news_letter" type="radio" value=""></label>
-          </div>
+            <div class="form-group">
+              <label><strong>NewsLetter</strong> &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+                @if($user->newsletter == 1)  
+                    <input class="form-check-input" name="newsletter" type="checkbox" value="0" checked></label>
+                @else
+                    <input class="form-check-input" name="newsletter" type="checkbox" value="1" ></label>
+                @endif
+            </div>
           <br>
             <div class="form-group">
               <label>Zip Code</label>
-              <input class="form-control" placeholder="Zip Code" type="text" id="zip_code" name="zip_code">
+            <input class="form-control" placeholder="Zip Code" type="text" id="zip_code" name="zip_code" value="{{ $user->zip_code }}">
             </div>
 
 <br>
@@ -111,55 +130,72 @@
           <div class="form-group row">
             <label class="col-form-label col-sm-4" for="">User Type</label>
             <div class="col-sm-8">
-              <select class="form-control">
-                <option>
-                  Select User Types
-                </option>
-                <option>
-                  hhghkj
-                </option>
-                <option>
-                  jkhj
-                </option>
-                <option>
-                  hjkhj
-                </option>
-                <option>
-                  hjkhjk
-                </option>
-                <option>
-                  hjkhj
-                </option>
+              <select class="form-control" name="roles">
+              
+                @foreach($userRole as $usrole)
+                  <option value="{{ $usrole }}">{{ $usrole }}</option>
+                @endforeach
+              
+                @foreach($roles as $role)
+                  <option value="{{ $role->name }}">{{ $role->name }}</option>
+                @endforeach
+                
               </select>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-sm-4" for="">Membership #</label>
             <div class="col-sm-8">
-              <input class="form-control" placeholder="Password" type="text" name="membership_no">
+            <input class="form-control" placeholder="Password" type="text" name="membership_no" value="{{ $user->membership_no }}">
             </div>
           </div>
           <br>
           <div class="form-group">
-                <label><strong>Old Record:</strong> &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<input class="form-check-input" name="old_record" type="radio" value=""></label>
+            <label>
+              <strong>Old Record:</strong> &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+              <input class="form-check-input" name="old_record" type="checkbox" value="1"></label>
           </div>
           <br>
           <div class="form-group row">
             <label class="col-form-label col-sm-4" for="">Username</label>
             <div class="col-sm-8">
-              <input class="form-control" placeholder="Username" type="text">
+            <input class="form-control" name="username" placeholder="Username" type="text" value="{{ $user->username }}">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-sm-4" for="">Password</label>
             <div class="col-sm-8">
-              <input class="form-control" placeholder="Password" type="password">
+            <input class="form-control" name="password" placeholder="Password" type="password" value="{{ $user->password }}">
             </div>
           </div>
           <hr>
-          <button class="btn btn-primary" type="submit"> Submit</button>
+          <div class="form-buttons-w">
+          	<button class="btn btn-primary" type="submit"> Submit</button>
+          	<button class="btn btn-secondary" type="reset"> Reset</button>
+	        <a type="button" href="{{ route('users.index') }}" class="btn btn-danger">
+	          Cancel
+	        </a>
+          </div>
           
   </form></div></div></div></div></div></div>  
+  <script>
 
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+          $('#blah').attr('src', e.target.result);
+        }
+        
+        reader.readAsDataURL(input.files[0]); // convert to base64 string
+      }
+    }
+    
+    $("#photo").change(function() {
+      readURL(this);
+    });
+    
+    </script>
 
 @endsection

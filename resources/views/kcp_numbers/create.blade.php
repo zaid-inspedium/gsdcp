@@ -11,7 +11,7 @@
         </h6>
         <div class="element-box">
           <h5 class="form-header">
-            KCP Numbers - List
+            KCP Numbers - New
           </h5>
         <form action="{{ route('KCPNumber.store') }}" method="POST" id="formValidate">
         @csrf
@@ -44,7 +44,7 @@
           <div class="form-buttons-w">
           	<button class="btn btn-primary" type="submit"> Submit</button>
           	<button class="btn btn-secondary" type="reset"> Reset</button>
-	        <a type="button" href="{{ route('KCPNumber.index') }}" class="btn btn-white">
+	        <a type="button" href="{{ route('KCPNumber.index') }}" class="btn btn-danger">
 	          Cancel
 	        </a>
           </div>

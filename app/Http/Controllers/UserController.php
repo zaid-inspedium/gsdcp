@@ -117,12 +117,13 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
+        $roles = Role::select('name')
+                        ->get();
         $countries = Countries::select('idCountry','countryName')
                         ->get();
         $cities = Cities::select('id','city')
                         ->get();
-        $userRole = $user->roles->pluck('first_name','first_name')->all();
+        $userRole = $user->roles->pluck('name','name')->all();
 
         return view('users.edit',compact('user','roles','userRole','countries','cities'));
     }
@@ -139,7 +140,6 @@ class UserController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'same:confirm-password',
             'roles' => 'required'
         ]);
 
@@ -151,9 +151,40 @@ class UserController extends Controller
             $input = array_except($input,array('password'));    
         }
 
+        //checking previous photo
+        $old_photo = $request->old_photo; 
+
+        if(request()->photo != $old_photo){
+
+            $imageName = time().'.'.request()->photo->getClientOriginalExtension();
+            request()->photo->move(public_path('members\profile_pic'), $imageName);
+        }else{
+            $imageName = $old_photo;
+        }
+        //end
 
         $user = User::find($id);
-        $user->update($input);
+        $user->membership_no = $request->membership_no; 
+        $user->username = $request->username; 
+        $user->password =  Hash::make($request->password);
+        $user->first_name = $request->first_name; 
+        $user->last_name = $request->last_name; 
+        $user->photo = $imageName;
+        $user->membership_no = $request->membership_no; 
+        $user->cnic = $request->cnic; 
+        $user->email = $request->email; 
+        $user->phone = $request->phone; 
+        $user->address = $request->address; 
+        $user->city = $request->city; 
+        $user->country = $request->country; 
+        $user->zip_code = $request->zip_code; 
+        $user->created_by = Auth::user()->id;
+        $user->newsletter = $request->newsletter; 
+        $user->old_record = ($request->old_record == '') ? 0 : 1; 
+        $user->update();
+
+        // $user = User::find($id);
+        // $user->update($input);
         DB::table('model_has_roles')->where('model_id',$id)->delete();
 
 

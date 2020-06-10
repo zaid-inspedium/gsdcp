@@ -11,11 +11,15 @@
         </h6>
         <div class="element-box">
           <h5 class="form-header">
-            KCP Numbers - List
+            KCP Numbers - List 
+            <div style="float: right; position: inherit;">
+              <a href="{{ route('KCPNumber.create') }}" class="btn btn-lg btn-success">
+                <i class="fa fa-plus-circle"> New</i>
+               </a>
+            </div>
           </h5>
-        <a href="{{ route('KCPNumber.create') }}" class="btn btn-lg btn-success">
-			   <i class="fa fa-plus-circle"> New</i>
-		    </a>
+         
+          
         @if ($message = Session::get('success'))
         <p></p>
           <div class="alert alert-success" id="msg">

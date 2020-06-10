@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 @if (count($errors) > 0)
   <div class="alert alert-danger">
     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -21,7 +21,7 @@
         Users/Members
       </h6>
       <div class="element-box">
-        <form action="{{ route('users.store') }}" method="POST" id="formValidate" enctype="multipart/form-data">
+        <form action="{{ route('users.store') }}" method="POST" id="formValidate" enctype="multipart/form-data" runat="server">
           @csrf
           <legend><span>New User Entry</span></legend>
           <div class="form-group">
@@ -39,10 +39,22 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-           <label for="photo">Photo</label>
-                <input class="form-control" type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/jpg">
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="photo">Photo</label>
+                     <input class="form-control" type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/jpg">
+               </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="photo_preview">Preview</label>
+                <img id="blah" src="#" alt="your image" height="120" width="100" />
+               </div>
+            </div>
           </div>
+          
           <div class="form-group">
             <label for="">Email</label><input class="form-control" name="email" id="email" placeholder="Email" type="email">
           </div>
@@ -82,9 +94,6 @@
                 <div class="form-group">
                   <label for="">City</label>
                   <select class="form-control" id="city" name="city">
-                    <option value="{{ $user->city}}">
-                      {{ $user->user_city->city }}
-                    </option>
                       
                       @foreach($cities as $city)
                           <option value="{{ $city->id }}">
@@ -145,10 +154,35 @@
               <input class="form-control" name="password" placeholder="Password" type="password">
             </div>
           </div>
-          <hr>
-          <button class="btn btn-primary" type="submit"> Submit</button>
+          
+          <div class="form-buttons-w">
+          	<button class="btn btn-primary" type="submit"> Submit</button>
+          	<button class="btn btn-secondary" type="reset"> Reset</button>
+	        <a type="button" href=" {{ route('users.index') }}" class="btn btn-danger">
+	          Cancel
+	        </a>
+          </div>
           
   </form></div></div></div></div></div></div>  
 
+<script>
+
+function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    
+    reader.onload = function(e) {
+      $('#blah').attr('src', e.target.result);
+    }
+    
+    reader.readAsDataURL(input.files[0]); // convert to base64 string
+  }
+}
+
+$("#photo").change(function() {
+  readURL(this);
+});
+
+</script>
 
 @endsection
