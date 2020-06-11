@@ -11,11 +11,13 @@
         </h6>
         <div class="element-box">
           <h5 class="form-header">
-            Kennels - List
+           Kennels - List 
+            <div style="float: right; position: inherit;">
+              <a href="{{ route('Kennels.create') }}" class="btn btn-lg btn-success">
+                <i class="fa fa-plus-circle"> New</i>
+               </a>
+            </div>
           </h5>
-        <a href="{{ route('Kennels.create') }}" class="btn btn-lg btn-success">
-			   <i class="fa fa-plus-circle"> New</i>
-		    </a>
         @if ($message = Session::get('success'))
         <p></p>
           <div class="alert alert-success" id="msg">

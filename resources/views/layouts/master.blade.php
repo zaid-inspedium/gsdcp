@@ -715,7 +715,6 @@
                 </div>
                 <span>Roles</span></a>
             </li>
-
             <li class="selected">
               <a href="/Modules">
                 <div class="icon-w">

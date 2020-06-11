@@ -154,12 +154,18 @@ class UserController extends Controller
         //checking previous photo
         $old_photo = $request->old_photo; 
 
-        if(request()->photo != $old_photo){
-
+        if($old_photo == ""){
             $imageName = time().'.'.request()->photo->getClientOriginalExtension();
             request()->photo->move(public_path('members\profile_pic'), $imageName);
         }else{
-            $imageName = $old_photo;
+            if($request->new_photo == ""){
+                $imageName = $old_photo;
+            }
+            else{
+                $imageName = time().'.'.request()->new_photo->getClientOriginalExtension();
+                 request()->new_photo->move(public_path('members\profile_pic'), $imageName);
+            }
+
         }
         //end
 

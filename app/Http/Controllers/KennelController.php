@@ -38,7 +38,7 @@ class KennelController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $owners = User::select('id','first_name','email')
+        $owners = User::select('id','first_name','email','membership_no')
                         ->where('status','=','Active')
                         ->get();
         return view('kennels.create',compact('user','owners'));
@@ -54,6 +54,7 @@ class KennelController extends Controller
     {
         request()->validate([
             'kennel_name' => 'required',
+            'owner_id' => 'required'
         ]);
 
         $owner_ID = $request->owner_id;
@@ -63,10 +64,6 @@ class KennelController extends Controller
             Kennel::create($request->all());
             return redirect()->route('Kennels.index')
                         ->with('success','Record Created.');
-
-        }else{
-
-            //$request->characteristics;
 
         }
 
@@ -93,7 +90,10 @@ class KennelController extends Controller
     {
         $user = Auth::user();
         $kennel = Kennel::findorFail($id);
-        return view('kennels.edit',compact('kennel','user'));
+        $owners = User::select('id','first_name','email','membership_no')
+                        ->where('status','=','Active')
+                        ->get();
+        return view('kennels.edit',compact('kennel','user','owners'));
     }
 
     /**
@@ -107,8 +107,8 @@ class KennelController extends Controller
     {
         $kennel = Kennel::findOrFail($id);
         $kennel->update($request->all());
-        return redirect()->route('kennels.index')
-            ->with('success','Record Added');
+        return redirect()->route('Kennels.index')
+            ->with('success','Record Updated');
     }
 
     /**
@@ -121,7 +121,7 @@ class KennelController extends Controller
     {
         $kennel = Kennel::findOrFail($id);
         $kennel->delete();
-        return redirect()->route('kennels.index')
+        return redirect()->route('Kennels.index')
             ->with('danger','Record Removed');
     }
 }

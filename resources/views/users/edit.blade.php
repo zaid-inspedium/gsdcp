@@ -2,6 +2,11 @@
 
 @section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<style>
+  #new_photo{
+    display: none;
+  }
+</style>
       <div class="content-i">
       <div class="content-box">
         <div class="row">
@@ -11,7 +16,7 @@
         Users/Members
       </h6>
       <div class="element-box">
-        <form action="{{ route('users.update',$user->id) }}" method="POST" id="formValidate">
+        <form action="{{ route('users.update',$user->id) }}" method="POST" id="formValidate" enctype="multipart/form-data" runat="server">
           @csrf
           @method('PUT')
           <legend><span>User Edit</span></legend>
@@ -38,6 +43,7 @@
               <div class="form-group">
                 <label for="photo">Photo</label>
                      <input class="form-control" type="file" id="photo" name="photo" accept="image/png, image/jpeg, image/jpg">
+                     
                </div>
             </div>
             <div class="col-sm-6">
@@ -50,8 +56,9 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="photo">Photo</label>
-                     <input class="form-control" type="file" id="photo" name="photo" value="{{ $user->photo }}" accept="image/png, image/jpeg, image/jpg">
+                     <input class="form-control" type="file" id="new_photo" name="new_photo" accept="image/png, image/jpeg, image/jpg">
                      <input type="hidden" value="{{ $user->photo }}" name="old_photo" />
+                     <button class="btn btn-primary" type="button" id="pic_change" name="pic_change" onclick="changePic(); ">Change Picture</button>
                </div>
             </div>
             <div class="col-sm-6">
@@ -59,6 +66,7 @@
                 <label for="photo_preview">Preview</label>
                 
               <img id="blah" src="{{ URL::asset("members/profile_pic/{$user->photo}") }}" alt="{{ $user->photo }}" height="120" width="100" />
+              <img id="blah2" src="#" alt="Your Image" height="120" width="100" />
                </div>
             </div>
             @endif
@@ -98,9 +106,9 @@
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="">City</label><select class="form-control" id="city" name="city">
-                <option>
-                  Select City
-                </option>
+                    <option value="{{ $user->city}}">
+                      {{ $user->user_city->city }}
+                    </option>
                 @foreach($cities as $city)
                 <option value="{{ $city->id }}">
                     {{ $city->city}}
@@ -180,6 +188,14 @@
   </form></div></div></div></div></div></div>  
   <script>
 
+    function changePic(){
+
+      document.getElementById("pic_change").style.display = "none";
+      document.getElementById("new_photo").style.display = "block";
+      document.getElementById("blah").style.display='none';
+
+    }
+
     function readURL(input) {
       if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -193,6 +209,24 @@
     }
     
     $("#photo").change(function() {
+      readURL(this);
+    });
+
+
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+          $('#blah2').attr('src', e.target.result);
+        }
+        
+        reader.readAsDataURL(input.files[0]); // convert to base64 string
+      }
+    }
+    
+    $("#new_photo").change(function() {
       readURL(this);
     });
     

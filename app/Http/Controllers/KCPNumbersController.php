@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\KCPNumbers;
 use Auth;
+use App\ActivityLog;
 
 class KCPNumbersController extends Controller
 {
@@ -13,10 +14,22 @@ class KCPNumbersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    function __construct()
+    {
+         $this->middleware('permission:kcpnumbers-list');
+         $this->middleware('permission:kcpnumbers-create', ['only' => ['create','store']]);
+         $this->middleware('permission:kcpnumbers-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:kcpnumbers-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $user = Auth()->user();
         $kcp_number = KCPNumbers::orderBy('id', 'DESC')->get();
+
+      //  ActivityLogController::store('View KCPNumbers','7');
+
         return view('kcp_numbers.index',compact('kcp_number','user'));
     }
 
