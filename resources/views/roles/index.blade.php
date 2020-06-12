@@ -61,7 +61,7 @@
                       <a href="{{ route('roles.edit',$role->id) }}" data-toggle="tooltip" data-placement="top"
                           title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
 
-
+                          <a class="btn btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
                           {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
                           {{ Form::button('<i class="os-icon os-icon-ui-15"></i>', ['type' => 'submit', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => 'Delete'] )  }}
                           {!! Form::close() !!}

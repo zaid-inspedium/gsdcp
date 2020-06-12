@@ -7,10 +7,14 @@ use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
+use App\Traits\UserActivityLog;
 
 
 class RoleController extends Controller
 {
+    use UserActivityLog;
+    public $module_name = "role";
+
     /**
      * Display a listing of the resource.
      *
@@ -33,6 +37,8 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         $roles = Role::orderBy('id','DESC')->paginate(20);
+        $this->saveActivity('Role List',$this->module_name);
+        
         return view('roles.index',compact('roles'))
             ->with('i', ($request->input('page', 1) - 1) * 20);
     }
@@ -66,6 +72,7 @@ class RoleController extends Controller
 
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
+        $this->saveActivity('Role Save',$this->module_name,"Create new record  ".$request->input('name')." ");
 
 
         return redirect()->route('roles.index')
@@ -83,7 +90,7 @@ class RoleController extends Controller
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
             ->get();
-
+        $this->saveActivity('Role View',$this->module_name,"View record  ".$role->name." ");
 
         return view('roles.show',compact('role','rolePermissions'));
     }
@@ -125,6 +132,8 @@ class RoleController extends Controller
 
         $role = Role::find($id);
         $role->name = $request->input('name');
+        $this->saveActivity('Role Updated',$this->module_name);
+
         $role->save();
 
 
@@ -143,6 +152,8 @@ class RoleController extends Controller
     public function destroy($id)
     {
         DB::table("roles")->where('id',$id)->delete();
+        $this->saveActivity('Role Delete',$this->module_name);
+
         return redirect()->route('roles.index')
                         ->with('success','Role deleted successfully');
     }

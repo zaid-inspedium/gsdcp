@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
-use App\UserActivityLog\saveActivity;
 
-class ActivityLogController extends Controller
+class StudCertificateController extends Controller
 {
-    use UserActivityLog;
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +13,7 @@ class ActivityLogController extends Controller
      */
     public function index()
     {
-        //
+        return view('stud_certificate.index');
     }
 
     /**
@@ -24,16 +21,10 @@ class ActivityLogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-    
-
     public function create()
     {
-        
-   
+        return view('stud_certificate.add');
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -41,20 +32,9 @@ class ActivityLogController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($activityName,$moduleID,$desc='')
+    public function store(Request $request)
     {
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $user_ip = ActivityLogController::getIPAddress();
-        $user_id = Auth()->user()->id;
-
-        $activityLog = new ActivityLog;
-        $activityLog->activity_name = $activityName; 
-        $activityLog->module_id = $moduleID; 
-        $activityLog->user_id =  $user_id;
-        $activityLog->user_ip = $user_ip; 
-        $activityLog->user_agent = $user_agent; 
-        $activityLog->description = $desc;
-        $user->save();
+        //
     }
 
     /**
@@ -65,7 +45,7 @@ class ActivityLogController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('stud_certificate.show');
     }
 
     /**
@@ -99,6 +79,6 @@ class ActivityLogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

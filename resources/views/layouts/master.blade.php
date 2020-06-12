@@ -724,6 +724,14 @@
             </li>
 
             <li class="selected">
+              <a href="/StudCertificates">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Stud Certificates</span></a>
+            </li>
+
+            <li class="selected">
               <a href="/Permission">
                 <div class="icon-w">
                   <div class="os-icon os-icon-layout"></div>

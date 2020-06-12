@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\KCPNumbers;
 use Auth;
-use App\ActivityLog;
+use App\Traits\UserActivityLog;
+
 
 class KCPNumbersController extends Controller
 {
+    use UserActivityLog;
+    public $module_name = "kcpnumbers";
     /**
      * Display a listing of the resource.
      *
@@ -27,8 +30,7 @@ class KCPNumbersController extends Controller
     {
         $user = Auth()->user();
         $kcp_number = KCPNumbers::orderBy('id', 'DESC')->get();
-
-      //  ActivityLogController::store('View KCPNumbers','7');
+        $this->saveActivity('KCPNumbers List',$this->module_name);
 
         return view('kcp_numbers.index',compact('kcp_number','user'));
     }
@@ -41,7 +43,6 @@ class KCPNumbersController extends Controller
     public function create()
     {
         $user = Auth::user();
-        // $emp_reg = employee_registration::select('emp_id','full_name')->get();
         return view('kcp_numbers.create',compact('user'));
     }
 
@@ -60,8 +61,9 @@ class KCPNumbersController extends Controller
         $kcp->status = "End";
         $kcp->save();
 
+        $this->saveActivity('KCP Number Save',$this->module_name,"Create new record  ".$request->input('start_range')." ");
         return redirect()->route('KCPNumber.index')
-            ->with('success','KCP Number created successfully');
+            ->with('success','Record created successfully');
     }
 
     /**
@@ -85,6 +87,7 @@ class KCPNumbersController extends Controller
     {
         $user = Auth::user();
         $kcp_number = KCPNumbers::findorFail($id);
+
         return view('kcp_numbers.edit',compact('kcp_number','user'));
     }
 
@@ -99,8 +102,10 @@ class KCPNumbersController extends Controller
     {
         $kcp_number = KCPNumbers::findOrFail($id);
         $kcp_number->update($request->all());
+        $this->saveActivity('Update KCP Number',$this->module_name);
+
         return redirect()->route('KCPNumber.index')
-            ->with('success','KCP Number updated successfully');
+            ->with('success','Record updated successfully');
     }
 
     /**
@@ -113,7 +118,9 @@ class KCPNumbersController extends Controller
     {
         $kcp_number = KCPNumbers::findOrFail($id);
         $kcp_number->delete();
+        $this->saveActivity('Delete KCP Number',$this->module_name);
+
         return redirect()->route('KCPNumber.index')
-            ->with('danger','KCP Number removed successfully');
+            ->with('danger','Record removed successfully');
     }
 }

@@ -22,6 +22,7 @@ Route::resource('KCPNumber','KCPNumbersController');
 Route::resource('Dogs','DogsController');
 Route::resource('Permission','PermissionController');
 Route::resource('Modules','ModulesController');
+Route::resource('StudCertificates','StudCertificateController');
 
 Route::get('/members', function(){
     return view('member_account/member_account');

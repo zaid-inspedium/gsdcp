@@ -13,6 +13,17 @@
           <h5 class="form-header">
             KCP Numbers - New
           </h5>
+          @if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+        </ul>
+    </div>
+@endif
+
         <form action="{{ route('KCPNumber.store') }}" method="POST" id="formValidate">
         @csrf
         <fieldset class="form-group">

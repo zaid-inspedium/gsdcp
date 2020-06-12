@@ -1,17 +1,23 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
 
 @section('content')
-<div class="row">
-    <div class="col-lg-12 margin-tb">
+<div class="content-i">
+            <div class="content-box"><div class="row">
+  <div class="col-lg-12">
+    <div class="element-wrapper">
+      <h6 class="element-header">
+        Edit Roles
+      </h6>
+
+      <div class="element-box">
         <div class="pull-left">
-            <h2>Edit Role</h2>
-        </div>
-        <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
         </div>
-    </div>
-</div>
+        <br>
+        <br>
+        <br>
+        <br>
 
 
 @if (count($errors) > 0)
@@ -28,24 +34,29 @@
 
 {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="col-xs-12 col-sm-12 col-md-6">
         <div class="form-group">
             <strong>Name:</strong>
             {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="col-xs-12 col-sm-12 col-md-6">
         <div class="form-group">
-            <strong>Permission:</strong>
-            <br/>
+            <label>Permissions</label>
+            <select class="form-control select2" multiple="true" name="permission[]" id="permission[]">
+                <option>- Select Roles -</option>
             @foreach($permission as $value)
-                <label>{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, array('class' => 'name')) }}
-                {{ $value->name }}</label>
-            <br/>
+                <!-- {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, array('class' => 'name')) }} -->
+                @if(array_search($value->id, $rolePermissions))
+                <option value="{{ $value->id }}" selected="true">{{ $value->name }}</option>
+                @else
+                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                @endif
             @endforeach
+        </select>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+    <div class="col-xs-12 col-sm-12 col-md-12 text-right">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </div>
