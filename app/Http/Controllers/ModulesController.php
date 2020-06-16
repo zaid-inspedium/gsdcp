@@ -60,7 +60,7 @@ class ModulesController extends Controller
         Modules::create($request->all());
         $this->saveActivity('Module Save',$this->module_name,"Create new record  ".$request->input('module_title')." ");
 
-        return redirect()->route('Module.index')
+        return redirect()->route('Modules.index')
                         ->with('success','Record created successfully.');
     }
 

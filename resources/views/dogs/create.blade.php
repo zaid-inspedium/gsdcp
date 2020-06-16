@@ -17,9 +17,8 @@
       </h6>
 
       <div class="element-box">
-        <form action="{{ route('Dogs.update',$dog->id) }}" method="POST" id="formValidate" enctype="multipart/form-data">
+        <form action="{{ route('Dogs.store') }}" method="POST" id="formValidate" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
           <legend><span><button onclick="myFunction()" class="btn btn-primary mr-2 inline-block" type="button">Dog Entry</button></span></legend>
         <div class="container" id="myDIV">
 
@@ -27,19 +26,29 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Dog Name</label>
             <div class="col-sm-3">
-              <input type="hidden" name="friendly_URL" id="friendly_URL" value="{{ $dog->friendly_URL }}">
-              <input id="dog_name" name="dog_name" class="form-control" data-error="Please input dog name" placeholder="Enter Dog's Name" required="required" type="text" value="{{ $dog->dog_name }}" onkeyup="Friendly_URLFunction()">
+              <input type="hidden" name="friendly_URL" id="friendly_URL" value="">
+              <input id="dog_name" name="dog_name" class="form-control" data-error="Please input dog name" placeholder="Enter Dog's Name" required="required" type="text" onkeyup="Friendly_URLFunction()">
               <div class="help-block form-text with-errors form-control-feedback"></div>
             </div>
             <div class="col-sm-2"><span class="text-danger h4" data-toggle="tooltip" data-placement="top" 
             title="required"> *</span></div>
           </div>
+          <!-- <div class="form-group row">
+            <div class="col-sm-2"></div>
+            <label class="col-form-label col-sm-2 h6"> Url</label>
+            <div class="col-sm-4">
+
+              <input id="url" name="url" class="form-control no-drop" placeholder="" type="text" readonly>
+              <small class="text-muted">Only alphanumerics and hyphen ( - ) are allowed</small>
+            </div>
+            <div class="col-sm-2"></div>
+          </div> -->
           <hr>
           <div class="form-group row">
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Kennel</label>
             <div class="col-sm-3">
-              <input id="kennel" name="kennel" class="form-control" value="{{ $dog->kennel }}" placeholder="Kennel" type="text">
+              <input id="kennel" name="kennel" class="form-control" placeholder="Kennel" type="text">
             </div>
             <div class="col-sm-2"></div>
           </div>
@@ -48,7 +57,7 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Breeder</label>
             <div class="col-sm-3">
-              <input id="breeder" name="breeder" class="form-control" value="{{ $dog->breeder }}" placeholder="Breeder" type="text">
+              <input id="breeder" name="breeder" class="form-control" placeholder="Breeder" type="text">
               <input type="hidden" name="breed" id="breed" value="German Shepherd Dog">
             </div>
             <div class="col-sm-2"></div>
@@ -60,13 +69,12 @@
             <div class="col-sm-3">
               <select class="form-control" id="sex"
                 name="sex">
-                @if ($dog->sex === 'Male')
-                  <option value="{{ $dog->sex }}">{{ $dog->sex }}</option>
-                  <option value="Female">Female</option>
-                @else
-                  <option value="{{ $dog->sex }}">{{ $dog->sex }}</option>
-                  <option value="Male">Male</option>
-                @endif
+                  <option value="Male">
+                    Male
+                  </option>
+                  <option value="Female">
+                    Female
+                  </option>
               </select>
             </div>
             <div class="col-sm-2"><span class="text-danger h4" data-toggle="tooltip" data-placement="top" 
@@ -78,7 +86,7 @@
             <label class="col-form-label col-sm-2 h6"> Whelping Date</label>
             <div class="col-sm-3">
               <div class="date-input">
-                <input class="single-daterange form-control" id="dob" name="dob" placeholder="Date of Whelping" type="text" value="{{ $dog->dob }}">
+                <input class="single-daterange form-control" id="dob" name="dob" placeholder="Date of Whelping" type="text" value="">
               </div>
             </div>
             <div class="col-sm-2"><span class="text-danger h4" data-toggle="tooltip" data-placement="top" 
@@ -91,7 +99,9 @@
             <div class="col-sm-3">
               
               <select class="form-control select2" name="sire" id="sire">
-                <option value="{{ $dog->sire }}">{{ $dog->sire }}</option>
+                <option>
+                  Select One
+                </option>
                 @foreach($total_sire as $sire)
                   <option value="{{ $sire->id }}">{{ $sire->dog_name }}</option>
                 @endforeach
@@ -113,7 +123,9 @@
             <label class="col-form-label col-sm-2 h6"> Dam</label>
             <div class="col-sm-3">
               <select class="form-control select2" name="dam" id="dam">
-                <option value="{{ $dog->dam }}">{{ $dog->dam }}</option>
+                <option>
+                  Select One
+                </option>
                 @foreach($total_dam as $dam)
                   <option value="{{ $dam->id }}">{{ $dam->dog_name }}</option>
                 @endforeach
@@ -138,7 +150,7 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Show Title</label>
             <div class="col-sm-3">
-              <input class="form-control" name="show_title" id="show_title" value="{{ $dog->show_title }}" placeholder="Show Title" type="text">
+              <input class="form-control" name="show_title" id="show_title" placeholder="Show Title" type="text">
               <div class="help-block form-text with-errors form-control-feedback"></div>
             </div>
             <div class="col-sm-2"></div>
@@ -148,7 +160,7 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Microchip/Tattoo #</label>
             <div class="col-sm-3">
-              <input class="form-control" name="microchip" id="microchip" value="{{ $dog->microchip }}" placeholder="Microchip/Tattoo #" type="text">
+              <input class="form-control" name="microchip" id="microchip" placeholder="Microchip/Tattoo #" type="text">
             </div>
             <div class="col-sm-2"></div>
           </div>
@@ -163,7 +175,7 @@
                     <input type="checkbox" id="kp_cb" onclick="myFunctionKP()">
                   </div>
                 </div>
-                <input type="text" class="form-control" name="KP" value="{{ $dog->KP }}" id="KP">
+                <input type="text" class="form-control" name="KP" id="KP">
               </div>
             </div>
             <div class="col-sm-2"></div>
@@ -173,12 +185,14 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Foreign Reg #</label>
             <div class="col-sm-3">
-              <input class="form-control" name="dog_reg_numbers" value="{{ $dog->dog_reg_numbers }}" id="for_reg" placeholder="Foreign Reg # Like SZ-565454, HR-12455" type="text">
+              <input class="form-control" name="dog_reg_numbers" id="for_reg" placeholder="Foreign Reg # Like SZ-565454, HR-12455" type="text">
             </div>
             <div class="col-sm-2">
               <div class="row-actions">
                 <span class="h5" data-toggle="tooltip" data-placement="top" 
                 title="Foreign Reg # Like SZ-565454, HR-12455"> ?</span>&ensp;
+                <!-- <a href="#" data-toggle="tooltip" data-placement="top" 
+                    title="Multiple Reg #" id="add_foreign" onclick="addRowForeign()"><i class="fa fa-plus-circle"></i></a> -->
               </div>
             </div>
             <div class="col-sm-2"></div>
@@ -214,7 +228,7 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Achievments</label>
             <div class="col-sm-3">
-              <input class="form-control" name="achievements" id="achievements" value="{{ $dog->achievements }}" placeholder="SchH,IPO,HGH" type="text">
+              <input class="form-control" name="achievements" id="achievements" placeholder="SchH,IPO,HGH" type="text">
             </div>
             <div class="col-sm-2"></div>
           </div>
@@ -223,7 +237,7 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> KKL</label>
             <div class="col-sm-3">
-              <input class="form-control" placeholder="KKL" type="text" name="KKL" value="{{ $dog->KKL }}" id="KKL">
+              <input class="form-control" placeholder="KKL" type="text" name="KKL" id="KKL">
             </div>
             <div class="col-sm-2"></div>
           </div>
@@ -237,14 +251,14 @@
               <div class="col-sm-6">
                 <div class="form-check">
                   <label class="form-check-label h6">Breed Survey Done? &ensp; &ensp; &ensp;</label>
-                  <input class="form-check-input" name="breed_survey_done" type="checkbox" value="{{ $dog->breed_survey_done }}">
-                  <label class="form-check-label h6"> &ensp; &ensp; &ensp;Breed Survey Date From: &ensp;</label><input class="input-mini spinner-default" name="survey_date_from" type="number" min="0" max="31" value="{{ $dog->survey_date_from }}">
-                  <label class="form-check-label h6"> &ensp;To: &ensp;</label><input class="input-mini spinner-default" name="survey_date_to" type="number" min="0" max="31" value="{{ $dog->survey_date_to }}">
-                  <input type="hidden" name="breed_survey_date" value="{{ $dog->breed_survey_date }}" id="breed_survey_date">
+                  <input class="form-check-input" name="breed_survey_done" type="checkbox" value="1">
+                  <label class="form-check-label h6"> &ensp; &ensp; &ensp;Breed Survey Date From: &ensp;</label><input class="input-mini spinner-default" name="survey_date_from" type="number" min="0" max="31" value="">
+                  <label class="form-check-label h6"> &ensp;To: &ensp;</label><input class="input-mini spinner-default" name="survey_date_to" type="number" min="0" max="31" value="">
+                  <input type="hidden" name="breed_survey_date" id="breed_survey_date">
                 </div>
               </div>
               <div class="col-sm-2">
-                <input class="form-control" name="breed_surveyor" type="text" value="{{ $dog->breed_surveyor }}">
+                <input class="form-control" name="breed_surveyor" type="text" value="">
               </div>
             </div>
             <hr>
@@ -253,14 +267,14 @@
               <div class="col-sm-6">
                 <div class="form-check">
                   <label class="form-check-label h6">Breed Survey Lifetime: &ensp; &ensp; &ensp;</label>
-                  <input class="form-check-input" name="breed_survey_life" type="checkbox" value="{{ $dog->breed_survey_life }}">
+                  <input class="form-check-input" name="breed_survey_life" type="checkbox" value="1">
                   <label style="width: 365px"></label>
                   <label class="form-check-label h6">  &ensp;</label>
-                  <input type="hidden" name="breed_survey_life_date" id="breed_survey_life_date" value="{{ $dog->breed_survey_life_date }}">
+                  <input type="hidden" name="breed_survey_life_date" id="breed_survey_life_date">
                 </div>
               </div>
               <div class="col-sm-2">
-                <input class="form-control" name="breed_surveyor_life" type="text" value="{{ $dog->breed_surveyor_life }}">
+                <input class="form-control" name="breed_surveyor_life" type="text" value="">
               </div>
             </div>
             <legend><span>1. General Information</span></legend>
@@ -268,10 +282,9 @@
               <div class="col-sm-2"></div>
               <label class="col-form-label col-sm-2 h6" for="">Height</label>
               <div class="col-sm-6">
-                <?php $height = explode(',', $dog->height); ?>
-                <input type="text" name="height1" id="height_1" class="input-small" value="{{ $height[0] }}" >
-                <input type="text" name="height2" id="height_2" class="input-small" value="{{ $height[1] }}" />
-                <input type="text" name="height3" id="height_3" class="input-small" value="{{ $height[2] }}" />
+                <input type="text" name="height1" id="height_1" class="input-small" value="" >
+                <input type="text" name="height2" id="height_2" class="input-small" value="" />
+                <input type="text" name="height3" id="height_3" class="input-small" value="" />
                 <abbr title="cm">cm</abbr>
               </div>
               <div class="col-sm-2"></div>
@@ -282,7 +295,7 @@
               <label class="col-form-label col-sm-2 h6" for="">Depth Chest</label>
               <div class="col-sm-3">
                 <input class="form-control" placeholder="Depth Chest(cm)" 
-                id="depth_chest" name="depth_chest" value="{{ $dog->depth_chest }}" type="text">
+                id="depth_chest" name="depth_chest" type="text">
               </div>
               <div class="col-sm-2"></div>
             </div>
@@ -291,7 +304,7 @@
               <div class="col-sm-2"></div>
               <label class="col-form-label col-sm-2 h6" for="">Chest Circumference:</label>
               <div class="col-sm-3">
-                <input class="form-control" value="{{ $dog->chest_circumference }}" placeholder="Chest Circumference (cm)" id="chest_circumference" name="chest_circumference" type="text">
+                <input class="form-control" placeholder="Chest Circumference (cm)" id="chest_circumference" name="chest_circumference" type="text">
               </div>
               <div class="col-sm-2"></div>
             </div>
@@ -300,7 +313,7 @@
               <div class="col-sm-2"></div>
               <label class="col-form-label col-sm-2 h6" for="">Weight</label>
               <div class="col-sm-3">
-                <input class="form-control" value="{{ $dog->weight }}" placeholder="Weight (kg)" id="weight" name="weight" type="text">
+                <input class="form-control" placeholder="Weight (kg)" id="weight" name="weight" type="text">
               </div>
               <div class="col-sm-2"></div>
             </div>
@@ -309,7 +322,7 @@
               <div class="col-sm-2"></div>
               <label class="col-form-label col-sm-2 h6" for="">Color & Markings</label>
               <div class="col-sm-3">
-                <input class="form-control" value="{{ $dog->color }}" placeholder="Color & Markings" id="color" name="color" type="text">
+                <input class="form-control" placeholder="Color & Markings" id="color" name="color" type="text">
               </div>
               <div class="col-sm-2"></div>
             </div>
@@ -319,13 +332,8 @@
               <label class="col-sm-2 col-form-label h6">Pigment</label>
               <div class="col-sm-3">
               <div class="form-check">
-              @if ($dog->pigment === 'Rich')
-                <label class="form-check-label"><input class="checkbox" name="pigment" type="checkbox" value="Rich" checked>1. Rich &ensp;</label>
-                <label class="form-check-label"><input class="checkbox" name="pigment" type="checkbox" value="Sufficient">2. Sufficient</label>
-              @else
                 <label class="form-check-label"><input class="checkbox" name="pigment" type="checkbox" value="Rich">1. Rich &ensp;</label>
-                <label class="form-check-label"><input class="checkbox" name="pigment" type="checkbox" value="Sufficient" checked>2. Sufficient</label>
-              @endif
+                <label class="form-check-label"><input class="checkbox" name="pigment" type="checkbox" value="Sufficient">2. Sufficient</label>
               </div>
               </div>
               <div class="col-sm-2"></div>
@@ -336,13 +344,8 @@
               <label class="col-sm-2 col-form-label h6">Hair</label>
               <div class="col-sm-3">
               <div class="form-check">
-              @if ($dog->hair === 'Stock Hair')
-                <label class="form-check-label"><input class="checkbox" name="hair" type="radio" value="Stock Hair" checked> 1. Stock Hair</label>
-                <label class="form-check-label"><input class="checkbox" name="hair" type="radio" value="Long-Stock Hair with Undercoat"> 2. Long-Stock Hair with Undercoat</label>
-              @else
                 <label class="form-check-label"><input class="checkbox" name="hair" type="radio" value="Stock Hair"> 1. Stock Hair</label>
-                <label class="form-check-label"><input class="checkbox" name="hair" type="radio" value="Long-Stock Hair with Undercoat" checked> 2. Long-Stock Hair with Undercoat</label>
-              @endif
+                <label class="form-check-label"><input class="checkbox" name="hair" type="radio" value="Long-Stock Hair with Undercoat"> 2. Long-Stock Hair with Undercoat</label>
               </div>
               </div>
               <div class="col-sm-2"></div>
@@ -1237,7 +1240,7 @@
           <div class="form-buttons-w">
             <button class="btn btn-primary" type="submit"> Submit</button>
             <button class="btn btn-secondary" type="reset"> Reset</button>
-            <a type="button" href="{{ route('Dogs.index') }}" class="btn btn-white">
+            <a type="button" href="{{ route('KCPNumber.index') }}" class="btn btn-white">
               Cancel
             </a>
           </div>
@@ -1286,6 +1289,35 @@ function myFunctionKP() {
     document.getElementById("KP").value = "";  
   }
 }
+
+// function addRowForeign() {
+//   // document.getElementById('remove_foreign_no').style.display = block;
+//   document.querySelector('#content').insertAdjacentHTML(
+//     'afterbegin',
+//     `<div class="row">
+//       <div class="col-sm-2"></div>
+//         <label class="col-form-label col-sm-2 h6"></label>
+//         <div class="col-sm-3">
+//           <input class="form-control" name="dog_reg_numbers[]" id="for_reg" placeholder="Foreign Reg # Like SZ-565454, HR-12455" type="text">
+//         </div>
+//         <div class="col-sm-2">
+//           <div class="row-actions">
+//             <span class="h5" data-toggle="tooltip" data-placement="top" 
+//             title="Foreign Reg # Like SZ-565454, HR-12455"> ?</span>&ensp;
+//             <a href="#" data-toggle="tooltip" data-placement="top" 
+//                 title="Multiple Reg #" id="add_foreign" onclick="addRowForeign()"><i class="fa fa-plus-circle"></i></a>&ensp;
+//             <a href="javascript: void(0);" data-toggle="tooltip" data-placement="top"
+//                 title="Remove" onclick="removeForeignRow(this)"><i class="fa fa-minus-circle"></i></a>
+//           </div>
+//         </div>
+//       <div class="col-sm-2"></div>
+//     </div><br>`      
+//   )
+// }
+
+// function removeForeignRow(e) {
+//   e.parentElement.parentElement.parentElement.remove();
+// }
 
 function Reload(this1) {
   // document.querySelector('#sire').value = 'Loading...'

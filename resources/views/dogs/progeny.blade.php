@@ -2,24 +2,6 @@
 
 @section('content')
 
-<!--------------------
-          START - Breadcrumbs
-          -------------------->
-     <!--  <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="index.html">Home</a>
-        </li>
-        <li class="breadcrumb-item">
-          <a href="index.html">Products</a>
-        </li>
-        <li class="breadcrumb-item">
-          <span>Laptop with retina screen</span>
-        </li>
-      </ul> -->
-      <!--------------------
-      END - Breadcrumbs
-      -------------------->
-
 
 <script type="text/javascript" src="http://gsdcp.org/db/application/views/admin/dogs/asset/js_gal/jquery.jcarousel.min.js"></script>
 <script type="text/javascript" src="http://gsdcp.org/db/application/views/admin/dogs/asset/js_gal/jquery.pikachoose.min.js"></script>

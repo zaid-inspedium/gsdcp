@@ -1,23 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-  <!--------------------
-          START - Breadcrumbs
-          -------------------->
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="index.html">Home</a>
-        </li>
-        <li class="breadcrumb-item">
-          <a href="index.html">Products</a>
-        </li>
-        <li class="breadcrumb-item">
-          <span>Laptop with retina screen</span>
-        </li>
-      </ul>
-      <!--------------------
-      END - Breadcrumbs
-      -------------------->
+
 <div id="content">
 <div class="wrapper">
 <div class="page-header">
@@ -25,15 +9,31 @@
 
 <div class="content-i">
             <div class="content-box">
-              <div class="element-wrapper">
-                <h6 class="element-header">
-                  Stud Certificates
-                </h6>
+              <div class="element-wrapper">   
                 <div class="element-box">
+                  <h5 class="form-header">
+                    Stud Certificate - List
+                    <div style="float: right; position: inherit;">
+                      <a href="{{ route('StudCertificates.create') }}" class="btn btn-lg btn-success">
+                        <i class="fa fa-plus-circle"> New</i>
+                       </a>
+                    </div>
+                  </h5>
+                @if ($message = Session::get('success'))
+                <p></p>
+                  <div class="alert alert-success" id="msg">
+                      <p>{{ $message }}</p>
+                  </div>
+                @elseif ($message = Session::get('danger'))
+                  <div class="alert alert-danger" id="msg">
+                      <p>{{ $message }}</p>
+                  </div>
+                @endif
                   <div class="table-responsive">
                     <table id="dataTable1" width="100%" class="table table-striped table-lightfont">
                       <thead>
                         <tr>
+                          <th>S.No</th>
                           <th>Sire</th>
                           <th>Dam</th>
                           <th>Mating Date</th>
@@ -44,19 +44,34 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td>
-                          <a><i class="os-icon os-icon-ui-49"></i></a>
-                          <a><i class="os-icon os-icon-ui-15"></i></a>
-                          </td>
-                        </tr>
-                        </tbody>
+                        <?php
+                         $i = 1;
+                        ?>
+                      @foreach ($certificates as $key => $cert)
+                          <tr>
+                            <td>{{ $i++ }}</td>
+                            <td>{{ $cert->sire_dog->dog_name }}</td>
+                            <td>{{ $cert->dam_dog->dog_name }}</td>
+                            <td>{{ $cert->mating_date }}</td>
+                            <td>{{ date('d-m-Y', strtotime($cert->created)) }}</td>
+                            <td>{{ $cert->user->first_name }}</td>
+                            <td><span class="badge badge-secondary">{{ $cert->status }}</span></td>
+                            <td class="row-actions">
+                              <a href="{{ route('StudCertificates.edit',$cert->id) }}" data-toggle="tooltip" data-placement="top"
+                                  title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
+        
+        
+                                  {!! Form::open(['method' => 'DELETE','route' => ['StudCertificates.destroy', $cert->id],'style'=>'display:inline']) !!}
+                                  {{ Form::button('<i class="os-icon os-icon-ui-15"></i>', ['type' => 'submit', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => 'Delete'] )  }}
+                                  {!! Form::close() !!}
+        
+                            
+                            </td>
+                          </tr>
+                        @endforeach 
+
+                        {{ $certificates->links() }}
+                      </tbody>
                       </table>
                   </div>
                 </div>

@@ -11,6 +11,7 @@ class Permission extends Model
     public function module()
     {
         return $this->belongsTo('App\Modules','module_id','id'); 
+        //module_id is fk and id is pk in permissions table
     }
 
 }
