@@ -168,6 +168,21 @@ $(function () {
   if ($('#dataTable1').length) {
     $('#dataTable1').DataTable({ buttons: ['copy', 'excel', 'pdf'] });
   }
+  if ($('#dataTable2').length) {
+    $('#dataTable2').DataTable({ buttons: ['copy', 'excel', 'pdf'] });
+  }
+  if ($('#dataTable3').length) {
+    $('#dataTable3').DataTable({ buttons: ['copy', 'excel', 'pdf'] });
+  }
+  if ($('#dataTable4').length) {
+    $('#dataTable4').DataTable({ buttons: ['copy', 'excel', 'pdf'] });
+  }
+  if ($('#dataTable5').length) {
+    $('#dataTable5').DataTable({ buttons: ['copy', 'excel', 'pdf'] });
+  }
+  if ($('#dataTable6').length) {
+    $('#dataTable6').DataTable({ buttons: ['copy', 'excel', 'pdf'] });
+  }
   // #6. EDITABLE TABLES
 
   if ($('#editableTable').length) {

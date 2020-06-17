@@ -268,6 +268,17 @@ class DogsController extends Controller
             ->with('success','Data removed successfully');
     }
 
+    public function dna_results()
+    {
+        $proven = Dog::select('id','dog_name','KP','microchip','DNA_status')->where('DNA_status', 'Proven')->orderBy('id', 'DESC')->paginate(50);
+        $stored = Dog::select('id','dog_name','KP','microchip','DNA_status')->where('DNA_status', 'Stored')->orderBy('id', 'DESC')->paginate(50);
+        $repeat = Dog::select('id','dog_name','KP','microchip','DNA_status')->where('DNA_status', 'Repeat')->orderBy('id', 'DESC')->paginate(50);
+        $applied_for = Dog::select('id','dog_name','KP','microchip','DNA_status')->where('DNA_status', 'Applied For')->orderBy('id', 'DESC')->paginate(50);
+        $not_available = Dog::select('id','dog_name','KP','microchip','DNA_status')->where('DNA_status', 'Not Available')->orderBy('id', 'DESC')->paginate(50);
+        $not_proven = Dog::select('id','dog_name','KP','microchip','DNA_status')->where('DNA_status', 'Not Proven')->orderBy('id', 'DESC')->paginate(50);
+        return view('dogs.dna_results',compact('proven','stored','repeat','applied_for','not_available','not_proven'));
+    }
+
     public function fetch_dam(Request $request)
     {
 
@@ -372,6 +383,7 @@ class DogsController extends Controller
 
           echo $output;
     }
+
 
     public function fetch_sire(Request $request)
 	  {

@@ -26,6 +26,9 @@ Dogs </h5>
                   <a href="{{ route('Dog.create') }}" class="btn btn-lg btn-success">
                    <i class="fa fa-plus-circle"> New</i>
                   </a>
+                  <a href="{{ url('/DNAResults') }}" class="btn btn-lg btn-secondary">
+                    <i class="fa fa-share-square-o"> DNA Result</i>
+                   </a>
                   <p></p>
                   @if ($message = Session::get('success'))
                   <p></p>

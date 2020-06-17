@@ -46,6 +46,7 @@ Route::get('/view_pedigree/{id}','DogsController@pedigree');
 Route::get('/view_progeny/{id}','DogsController@progeny');
 Route::get('/destroy/{id}','KCPNumbersController@destroy');
 Route::get('/DogStatusUpdate/{id}','DogsController@update_status');
+Route::get('/DNAResults','DogsController@dna_results');
 
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
