@@ -6,6 +6,7 @@
 #mating {
   visibility:none;
 }
+
 </style>
 
       <div class="content-i">
@@ -95,7 +96,7 @@
             <label for="">Mating Date: </label><input class="form-control" type="date" name="mating_date" id="mating_date">
           </div>
           <div class="form-buttons-w">
-          	<button class="btn btn-primary" type="submit" onclick="loadSpinner(this);"> Submit</button>
+          	<button class="btn btn-primary" type="submit" id="btnsubmit" onclick="loadSpinner(this);"> Submit</button>
           	<button class="btn btn-secondary" type="reset"> Reset</button>
 	        <a type="button" href="{{ route('StudCertificates.index') }}" class="btn btn-danger">
 	          Cancel
@@ -104,6 +105,7 @@
   </div>
 </div>
 </form>
+</div>
 </div>
 </div>
 </div>

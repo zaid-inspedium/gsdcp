@@ -17,7 +17,7 @@
       </h6>
 
       <div class="element-box">
-        <form action="{{ route('Dogs.store') }}" method="POST" id="formValidate" enctype="multipart/form-data">
+        <form action="{{ route('Dog.store') }}" method="POST" id="formValidate" enctype="multipart/form-data">
         @csrf
           <legend><span><button onclick="myFunction()" class="btn btn-primary mr-2 inline-block" type="button">Dog Entry</button></span></legend>
         <div class="container" id="myDIV">
