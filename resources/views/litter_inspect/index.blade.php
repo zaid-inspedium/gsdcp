@@ -30,6 +30,7 @@
                     <table id="dataTable1" width="100%" class="table table-striped table-lightfont">
                       <thead>
                         <tr>
+                          <th>S.no</th>
                           <th>Breeder</th>
                           <th>Sire</th>
                           <th>Dam</th>
@@ -41,9 +42,12 @@
                         </tr>
                       </thead>
                       <tbody>
-                        
+                        <?php
+                        $i = 1;
+                        ?>
                         @foreach ($litter_inspect as $key => $inspect)
                         <tr>
+                          <td>{{ $i++ }}</td>
                           <td>{{ $inspect->breeder->first_name }}</td>
                           <td>{{ $inspect->sire_dog->dog_name }}</td>
                           <td>{{ $inspect->dam_dog->dog_name }}</td>

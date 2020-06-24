@@ -16,13 +16,13 @@ class LitterInspectionController extends Controller
     use UserActivityLog;
     public $module_name = "litter_inspection";
 
-    // function __construct()
-    // {
-    //      $this->middleware('permission:litter_inspection-list');
-    //      $this->middleware('permission:litter_inspection-create', ['only' => ['create','store']]);
-    //      $this->middleware('permission:litter_inspection-edit', ['only' => ['edit','update']]);
-    //      $this->middleware('permission:litter_inspection-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+         $this->middleware('permission:litter_inspection-list');
+         $this->middleware('permission:litter_inspection-create', ['only' => ['create','store']]);
+         $this->middleware('permission:litter_inspection-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:litter_inspection-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * Display a listing of the resource.
@@ -174,14 +174,21 @@ class LitterInspectionController extends Controller
             'status' => 'required'
         ]);
 
-        $fileName = time().'.'.request()->images->getClientOriginalName();
-        request()->images->move(public_path('litter_images'), $fileName);
+        $images_name = array();
+        $images = request()->images;
+        foreach($images as $img){
+
+            $fileName = time().'.'.$img->getClientOriginalName();
+            $img->move(public_path('litter_images'), $fileName);
+            $images_name[] = $fileName;
+        }
+        $image_List = implode(',', $images_name); 
 
         $inspect = LitterInspection::find($id);
         $inspect->breeder_id = $request->input('breeder_id');
         $inspect->sire_id = $request->input('sire_id');
         $inspect->dam_id = $request->input('dam_id');
-        $inspect->images = $fileName;
+        $inspect->images = $image_List;
         $inspect->status = $request->input('status');
         $inspect->city_id = $request->input('city_id');
         $inspect->remarks = $request->input('remarks');

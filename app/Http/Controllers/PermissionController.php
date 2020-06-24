@@ -40,7 +40,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        $modules = Modules::get();
+        $modules = Modules::orderBy('id', 'DESC')->get();
         return view('permissions.create', compact('modules'));
     }
 

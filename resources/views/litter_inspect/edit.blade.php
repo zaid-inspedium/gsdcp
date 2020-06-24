@@ -84,13 +84,18 @@
               <label>Status</label>
               <select class="form-control" id="status" name="status">
                 @if($litter_inspect->status == 1)
-                  <option selected value="1">Pending</option>
                   <option selected value="2">Approved</option>
                   <option selected value="4">Rejected</option>
                 @elseif($litter_inspect->status == 2)
-                  <option selected value="2">Approved</option>
+                  <option selected value="1">Pending</option>
+                  <option selected value="4">Rejected</option>
                 @elseif($litter_inspect->status == 3)
-                  <option selected value="1">Expired</option>
+                  <option selected value="1">Pending</option>
+                  <option selected value="2">Approved</option>
+                  <option selected value="4">Rejected</option>
+                @elseif($litter_inspect->status == 4)
+                  <option selected value="1">Pending</option>
+                  <option selected value="2">Approved</option>
                 @endif
               </select>
             </div>
@@ -100,7 +105,7 @@
         <div class="col-sm-6">
         <div class="form-group">
         <label for="files">Select images:</label>
-        <input class="form-control" type="file" id="images" name="images">
+        <input class="form-control" type="file" id="images" name="images[]" multiple>
       </div>
     </div>
     <div class="col-sm-6">

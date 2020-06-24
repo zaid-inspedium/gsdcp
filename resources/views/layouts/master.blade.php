@@ -748,8 +748,6 @@
                 <span>KCP Numbers</span></a>
             </li>
 
-            
-
             <li class="selected">
               <a href="/Kennels">
                 <div class="icon-w">
@@ -757,6 +755,23 @@
                 </div>
                 <span>Kennels</span></a>
             </li>
+
+            <li class="selected">
+              <a href="/LitterInspections">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Litter Inspection</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/Litters">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Litter Registration</span></a>
+            </li>
+            
 
             {{-- Previous html template menu --}}
             <li class="sub-header">
