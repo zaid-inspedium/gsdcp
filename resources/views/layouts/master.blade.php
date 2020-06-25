@@ -254,7 +254,7 @@
         -------------------->
         <div class="menu-mobile menu-activated-on-click color-scheme-dark">
           <div class="mm-logo-buttons-w">
-            <a class="mm-logo" href="index.html"><img src="{{asset('assets/img/logo/left-logo.png')}}"><span>GSDCP</span></a>
+            <a class="mm-logo" href="index.html"><img src="{{asset('assets/img/logo/gsd-logo.png')}}"><span>GSDCP</span></a>
             <div class="mm-buttons">
               <div class="content-panel-open">
                 <div class="os-icon os-icon-grid-circles"></div>
@@ -649,7 +649,7 @@
         <div class="menu-w color-scheme-light color-style-transparent menu-position-side menu-side-left menu-layout-compact sub-menu-style-over sub-menu-color-bright selected-menu-color-light menu-activated-on-hover menu-has-selected-link">
           <div class="logo-w">
             <a class="logo" href="index.html">
-              <img src="{{asset('assets/img/logo/left-logo.png')}}" style="height:70px; width:150px;"/>
+              <img src="{{asset('assets/img/logo/gsd-logo.png')}}" style="height:50px; width:150px;"/>
               
             </a>
           </div>

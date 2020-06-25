@@ -37,9 +37,6 @@
         </div>
           
       </div>
-          
-          <br>
-
           <!-- if the owner's account has a negative charge on the account, then print this -->
 
           <!-- <span class="badge badge-important" style="color:white;background-color: red;">Current balance is -12,000. <a>Click here</a> to charge member account. "LITTER FEE is 2,200"</span>
@@ -63,7 +60,7 @@
          <div class='col-sm-6'>
           <div class='form-group'>
             <label for="">Dam:</label>
-            <select class="form-control select2 selectpicker" data-live-search="true" id="dam_id" name="dam_id">
+            <select class="form-control select2 selectpicker dynamicdam" data-dependent="dam_result" data-live-search="true" id="dam_id" name="dam_id">
               <option value="0">- Select Dam -</option>
               @foreach($dam as $dam_dog)
                <option value="{{$dam_dog->id}}">{{$dam_dog->dog_name}}</option>
@@ -71,7 +68,18 @@
             </select>
           </div>
         </div>
-        <span id="sire_result"></span>
+      </div>
+      <div class="row">
+        <div class='col-sm-6'>
+          <div class='form-group'>
+            <span id="sire_result"></span>
+          </div>
+        </div>
+        <div class='col-sm-6'>
+          <div class='form-group'>
+            <span id="dam_result"></span>
+          </div>
+        </div>
       </div>
           <br>
 
@@ -85,7 +93,7 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="">Whelping Date:</label><input id="whelping_date" name="whelping_date" class="form-control" type="date">
+                <label for="">Whelping Date:</label><input id="whelping_date" name="whelping_date" class="form-control dynamicwhelpingdate" type="date">
               </div>
             </div>
             <div class="col-sm-6">
@@ -95,6 +103,13 @@
                   <option>Permission Granted</option>
                   <option>Permission Denied</option>
                 </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class='col-sm-6'>
+              <div class='form-group'>
+                <span id="whelping_result"></span>
               </div>
             </div>
           </div>
@@ -123,8 +138,37 @@
             </div>
             <div class="col-sm-3">
               <div class="form-group">
-                <br>
-                <label for=""><strong>Fullname:</strong></label> <var id="puppy_name"></var>
+             
+                <label for=""><strong>Fullname:</strong></label>
+                <input id="litter_full_name" name="litter_full_name" value="" class="form-control" type="text" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <input oninput="myFunction()" id="dog_name" name="dog_name" class="form-control" placeholder="Enter Dog Name" type="text">
+              </div>
+            </div>
+            <div class="col-sm-3" id="add">
+              <div class="form-group">
+               
+                <select id="gender" name="address" class="form-control">
+                  <option>- Select Gender -</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+               
+                <input id="color_markings" name="color_markings" value="" class="form-control" placeholder="Color & Markings" type="text">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <input id="litter_full_name" name="litter_full_name" value="" class="form-control" type="text" readonly>
               </div>
             </div>
           </div>
@@ -184,17 +228,14 @@ $(document).ready(function(){
   });
 
   $('.dynamicsire').change(function(){
-    
     if($(this).val() != '')
     {
      var select = $(this).attr("id");
      var value = $(this).val();
      var dependent = $(this).data('dependent');
-  
      var _token = $('input[name="_token"]').val();
-  
      $.ajax({
-      url:"{{ route('dynamicdependent.fetch_studcertificate') }}",
+      url:"{{ route('dynamicdependent.fetch_sireinfo') }}",
       post:"POST",
       beforeSend: function (xhr) {
             var token = $('meta[name="csrf_token"]').attr('content');
@@ -211,12 +252,77 @@ $(document).ready(function(){
       {
        $('#sire_result').html(result);
       }
-  
      });
-    
- 
     }
    });
+
+   $('.dynamicdam').change(function(){
+    if($(this).val() != '')
+    {
+     var select = $(this).attr("id");
+     var value = $(this).val();
+     var dependent = $(this).data('dependent');
+     var stud = document.getElementById('sire_id').value;
+
+     var _token = $('input[name="_token"]').val();
+     $.ajax({
+      url:"{{ route('dynamicdependent.fetch_daminfo') }}",
+      post:"POST",
+      beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+ 
+            if (token) {
+                  return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+      data:{
+      select:select, 
+      value:value,
+      stud:stud
+      },      
+      success:function(result)
+      {
+       $('#dam_result').html(result);
+      }
+     });
+    }
+   });
+
+   $('.dynamicwhelpingdate').change(function(){
+    if($(this).val() != '')
+    {
+     var select = $(this).attr("id");
+     var value = $(this).val();
+     var dependent = $(this).data('dependent');
+     var stud = document.getElementById('sire_id').value;
+     var dam = document.getElementById('dam_id').value;
+     var _token = $('input[name="_token"]').val();
+     console.log(value);
+     $.ajax({
+      url:"{{ route('dynamicdependent.fetch_matingdate') }}",
+      post:"POST",
+      beforeSend: function (xhr) {
+            var token = $('meta[name="csrf_token"]').attr('content');
+ 
+            if (token) {
+                  return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+            }
+        },
+      data:{
+      select:select, 
+      value:value,
+      stud:stud,
+      dam:dam
+      },      
+      success:function(result)
+      {
+       $('#whelping_result').html(result);
+      }
+     });
+    }
+   });
+
+
 });
 
 

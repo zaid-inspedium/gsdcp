@@ -10,6 +10,7 @@ use App\Dog;
 use App\User;
 use App\Kennel;
 use App\StudCertificate;
+use App\LitterDetail;
 
 class LitterRegistrationController extends Controller
 {
@@ -105,31 +106,71 @@ class LitterRegistrationController extends Controller
             $kennel_prefix = $kennels->prefix;
             $kennel_suffix = $kennels->suffix;
         }
+
+        $litters_count = LitterRegistration::where('owner_id','=',$value)
+                        ->count();
+
+        if($litters_count > 0){
+            $litter_data = LitterRegistration::where('owner_id','=',$value)
+                            ->latest('id')
+                            ->first();
+            
+            $previous_litter = $litter_data->litter_detail[0]->name;
+        }
+
+
         $member_balance = -5;
-        $output = '<div class="form-group">
+        $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
                         <label><strong>Kennel Name:</strong></label>
-                        <span>'.$kennel_name.'</span>
-                    </div>
-                    <div class="form-group">
+                             <span>'.$kennel_name.'</span>
+                        <br>
                         <label><strong>Suffix / Prefix:</strong></label>
-                        <span>'.$kennel_suffix.' / '.$kennel_prefix.'</span>
+                            <span>'.$kennel_suffix.' / '.$kennel_prefix.'</span>
                     </div>';
         if($member_balance < 0){
-            $output .= '<div class="form-group" style="color:red">
-                        
-                        <span>Current balance is -12,000. Click here to charge member account. LITTER FEE is 2,200</span>
-                    </div>';
+            $output .= '<div class="form-group alert-danger" style="color:red; padding:10px;">
+                            <span>Current balance is -12,000. Click here to charge member account. LITTER FEE is 2,200</span>
+                        </div>';
         }
+        
+        if(isset($previous_litter)){
+            $first_char = str_split($previous_litter);
+            $output .= '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
+                        <label><strong>Previous Letter Used:</strong></label>
+                            <span>'.$kennel_prefix.' "'.$first_char[0].'" '.$kennel_suffix.'</span>
+                        </div>';
+        }
+
         echo $output;
     }
 
-    public function fetch_studcertificate(Request $request){
+    public function fetch_sireinfo(Request $request){
 
         $select = $request->get('select');
 		$value = $request->get('value');
         $dependent = $request->get('dependent');
+        $sire_info = Dog::select('hip','elbows')
+                        ->where('id','=',$value)
+                        ->first();
+        $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
+                    <h4>Sire Info:</h4>
+                    
+                    <label><b>HD</b> : '.$sire_info->hip.'</label>
+                    <label><b>ED</b> : '.$sire_info->elbows.'</label>
+                   </div>';
+        echo $output;
 
-        $certificate_count = StudCertificate::where('sire','=',$value)
+    }
+
+    public function fetch_daminfo(Request $request){
+
+        $select = $request->get('select');
+		$value = $request->get('value');
+        $dependent = $request->get('dependent');
+        $stud = $request->get('stud');
+
+        $certificate_count = StudCertificate::where('sire','=',$stud)
+                        ->where('dam','=',$value)
                         ->count();
 
         if($certificate_count == 0){
@@ -138,7 +179,51 @@ class LitterRegistrationController extends Controller
         }else{
             $certificate_msg = '';
         }
-        $output = '<div style="margin-left:20px;"><h4 style="color:red;">'.$certificate_msg.'</h4></div>';
+
+        $dam_info = Dog::select('hip','elbows')
+                        ->where('id','=',$value)
+                        ->first();
+
+        $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
+                    <h4>Dam Info:</h4>
+                    <h5 style="color:red;">'.$certificate_msg.'</h5>
+                    <label><b>HD</b> : '.$dam_info->hip.'</label>
+                    <label><b>ED</b> : '.$dam_info->elbows.'</label>
+                   </div>';
+        
+        echo $output;
+
+    }
+
+    public function fetch_matingdate(Request $request){
+
+        $select = $request->get('select');
+		$whelping_date = $request->get('value');
+        $dependent = $request->get('dependent');
+        $stud = $request->get('stud');
+        $dam = $request->get('dam');
+
+        $certificate_mating_date = StudCertificate::select('mating_date')
+                        ->where('sire','=',$stud)
+                        ->where('dam','=',$dam)
+                        ->first();
+        
+        $start  = date_create($certificate_mating_date->mating_date);
+        $end 	= date_create($whelping_date);
+        $diff  	= date_diff( $start, $end );
+        $dates_diff_in_days = $diff->days;
+                     
+        if($dates_diff_in_days < 58 || $dates_diff_in_days > 65  ){
+            $mating_date_msg = 'Litters can only be registered in between 58 to 65 days of mating';
+        }else{
+            $mating_date_msg = '';
+        }
+
+        $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
+                    <h4>Mating Date Info:</h4>
+                    <h5 style="color:red;">'.$mating_date_msg.'</h5>
+         
+                   </div>';
         
         echo $output;
 

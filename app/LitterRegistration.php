@@ -32,4 +32,9 @@ class LitterRegistration extends Model
     {
         return $this->belongsTo('App\User','created_by','id'); 
     }
+
+    public function litter_detail()
+    {
+        return $this->hasMany('App\LitterDetail','litter_id','id'); 
+    }
 }
