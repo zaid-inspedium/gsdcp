@@ -10,7 +10,8 @@
 </style>
 
       <div class="content-i">
-            <div class="content-box"><div class="row">
+            <div class="content-box">
+              <div class="row">
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
@@ -25,7 +26,7 @@
         @endforeach
         </ul>
     </div>
-@endif
+    @endif
   <div class="element-box">
     <h5 class="form-header">
       Stud Certificate Form
@@ -38,6 +39,8 @@
 </div>
 </div>
 
+<form action="{{ route('StudCertificates.store') }}" method="POST" id="formValidate"> 
+  @csrf
 <div class="row">
 <div class="col-lg-6">
     <div class="element-wrapper">
@@ -45,10 +48,8 @@
         Sire
       </h6>
       <div class="element-box">
-        <form action="{{ route('StudCertificates.store') }}" method="POST" id="formValidate">
-          @csrf
           <div class="form-group">
-            <label for="">Name Of Sire</label><select class="form-control select2 dynamicsire" data-dependent="sire_result"  name="sire_name" id="sire_name" >
+            <label for="">Name Of Sire</label><select class="form-control select2 dynamicsire" data-dependent="sire_result"  name="sire_name" id="sire_name" required>
               <option value="0">
                 Select Sire Name
               </option>
@@ -70,7 +71,7 @@
       </h6>
       <div class="element-box">
           <div class="form-group">
-            <label for="">Name Of Dam</label><select class="form-control select2 dynamicdam" name="dam_name" data-dependent="dam_result" id="dam_name">
+            <label for="">Name Of Dam</label><select class="form-control select2 dynamicdam" name="dam_name" data-dependent="dam_result" id="dam_name" required>
               <option value="0">
                 Select Dam Name
               </option>
@@ -93,7 +94,8 @@
     <div class="element-wrapper">
   <div class="element-box">
     <div class="form-group">
-            <label for="">Mating Date: </label><input class="form-control" type="date" name="mating_date" id="mating_date">
+            <label for="">Mating Date: </label>
+            <input class="form-control" type="date" name="mating_date" id="mating_date" required/>
           </div>
           <div class="form-buttons-w">
           	<button class="btn btn-primary" type="submit" id="btnsubmit" onclick="loadSpinner(this);"> Submit</button>
@@ -104,13 +106,17 @@
           </div>
   </div>
 </div>
+
+</div>
+</div>
 </form>
 </div>
 </div>
-</div>
-</div>
 <script>
-  function loadSpinner(this1)
+
+document.getElementById("btnsubmit").disabled = true;
+
+function loadSpinner(this1)
 {
   this1.disabled=true; 
   this1.innerHTML='<i class="fa fa-spinner fa-spin"></i> Save';
@@ -119,40 +125,6 @@
 
 
 $(document).ready(function(){
-  $('.dynamicsire').change(function(){
-    
-   if($(this).val() != '')
-   {
-    var select = $(this).attr("id");
-    var value = $(this).val();
-    var dependent = $(this).data('dependent');
- 
-    var _token = $('input[name="_token"]').val();
- 
-    $.ajax({
-     url:"{{ route('dynamicdependent.fetch_sire') }}",
-     post:"POST",
-     beforeSend: function (xhr) {
-           var token = $('meta[name="csrf_token"]').attr('content');
-
-           if (token) {
-                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
-           }
-       },
-     data:{
-     select:select, 
-     value:value
-     },      
-     success:function(result)
-     {
-      $('#sire_result').html(result);
-     }
- 
-    });
-   
-
-   }
-  });
 
   $('.dynamicdam').change(function(){
     
@@ -192,7 +164,48 @@ $(document).ready(function(){
     }
    });
 
+
+
+  $('.dynamicsire').change(function(){
+    
+   if($(this).val() != '')
+   {
+    var select = $(this).attr("id");
+    var value = $(this).val();
+    var dependent = $(this).data('dependent');
+ 
+    var _token = $('input[name="_token"]').val();
+ 
+    $.ajax({
+     url:"{{ route('dynamicdependent.fetch_sire') }}",
+     post:"POST",
+     beforeSend: function (xhr) {
+           var token = $('meta[name="csrf_token"]').attr('content');
+
+           if (token) {
+                 return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+           }
+       },
+     data:{
+     select:select, 
+     value:value
+     },      
+     success:function(result)
+     {
+      $('#sire_result').html(result);
+     }
+ 
+    });
+   
+
+   }
+  });
+
+
+
 });
+
+
 </script>
 
 @endsection

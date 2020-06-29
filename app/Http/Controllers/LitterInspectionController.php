@@ -10,6 +10,7 @@ use App\Dog;
 use App\User;
 use App\Cities;
 use App\StudCertificate;
+use App\DogOwner;
 
 class LitterInspectionController extends Controller
 {
@@ -54,27 +55,54 @@ class LitterInspectionController extends Controller
      */
     public function create()
     {
-        $dam = Dog::select('id','dog_name')
+        $user = Auth::user();
+            if($user->user_type_id == '3'){
+                //if logged in user is member
+                $breeders = User::select('id','first_name','last_name','membership_no')
+                    ->where('status','=','Active')
+                    ->where('id','=',$user->id)
+                    ->Orderby('first_name','ASC')
+                    ->first();
+
+                $dogowners = DogOwner::select('dog_id')
+                                        ->where('owner_id','=',$breeders->id)
+                                        ->get();
+                
+                $dam = Dog::select('id','dog_name')
+                    ->whereIn('id',$dogowners)
+                    ->where('status','=','Active')
+                    ->Orderby('dog_name','ASC')
+                    ->get();
+                
+                $user = $breeders;
+
+            }else{
+                //if logged in user is not member(can be group breed warden or admin)
+                $breeders = User::select('id','first_name','last_name','membership_no')
+                    ->where('status','=','Active')
+                    ->Orderby('first_name','ASC')
+                    ->get();
+                
+                $dam = Dog::select('id','dog_name')
                     ->where('status','=','Active')
                     ->where('sex','=','Female')
                     ->Orderby('dog_name','ASC')
                     ->get();
 
-        $sire = Dog::select('id','dog_name')
-                    ->where('status','=','Active')
-                    ->where('sex','=','Male')
-                    ->Orderby('dog_name','ASC')
-                    ->get();
+            }
 
-        $breeders = User::select('id','first_name','last_name','membership_no')
-                    ->where('status','=','Active')
-                    ->Orderby('first_name','ASC')
-                    ->get();
+                $sire = Dog::select('id','dog_name')
+                            ->where('status','=','Active')
+                            ->where('sex','=','Male')
+                            ->Orderby('dog_name','ASC')
+                            ->get();
 
-        $cities = Cities::where('status','=','Active')
-                    ->Orderby('city','ASC')
-                    ->get();
-        $user = Auth::user();
+
+                $cities = Cities::where('status','=','Active')
+                            ->Orderby('city','ASC')
+                            ->get();
+                $user = Auth::user();
+                
 
         return view('litter_inspect.create',compact('dam','sire','breeders','cities','user'));
     }
@@ -199,6 +227,150 @@ class LitterInspectionController extends Controller
         return redirect()->route('LitterInspections.index')
             ->with('success','Record updated successfully');
     }
+
+    // sahahmir work
+    public function second()
+    {
+        // $inspection = DB::select(DB::raw("SELECT * FROM litter_inspect
+        //     LEFT JOIN users ON users.id = litter_inspect.user_id
+        //     LEFT JOIN cities ON cities.id = litter_inspect.city
+        //     LEFT JOIN kennels ON kennels.owner_id = litter_inspect.user_id
+        //     WHERE litter_inspect.id = '".$id."' "));
+        $dogs = Dog::get();
+            return view('litter_inspect/second_create');
+    }
+    //2:35
+
+    public function check(request $request){
+        $curr_date = date("Y-m-d");
+        if($curr_date == $request->check_date){
+            $user = Auth::user();
+            if($user->user_type_id == '1'){
+                $cities = Cities::where('id','=',$user->city)
+                                 ->get();
+                $kennel = Kennel::select('kennel_name','prefix','suffix')
+                                ->where('owner_id','=',$user->id)
+                                ->get();
+                $dam = Dog::select('dogs.id','dog_name')
+                                ->where('status','=','Active')
+                                ->where('dog_owners.owner_id',$user->id)
+                                ->leftjoin('dog_owners','dog_owners.dog_id','=','dogs.id')
+                                ->where('sex','=','Female')
+                                ->Orderby('dog_name','ASC')
+                                ->get();
+                    if(count($dam) == 0){
+                    $dam1 = Dog::select('id','dog_name')
+                                ->where('status','=','Active')
+                                ->where('sex','=','Female')
+                                ->Orderby('dog_name','ASC')
+                                ->get();
+                    }
+                    else{
+                        $dam1 = array();
+                    }
+                $sire = Dog::select('dogs.id','dog_name')
+                            ->where('status','=','Active')
+                            ->where('dog_owners.owner_id',$user->id)
+                            ->leftjoin('dog_owners','dog_owners.dog_id','=','dogs.id')
+                            ->where('sex','=','Male')
+                            ->Orderby('dog_name','ASC')
+                            ->get();
+                if(count($sire) == 0){
+                    $sire1 = Dog::select('id','dog_name')
+                                    ->where('status','=','Active')
+                                    ->where('sex','=','Male')
+                                    ->Orderby('dog_name','ASC')
+                                    ->get();
+                }else{
+                    $sire1 = array();
+                }
+                $breeders = array();
+                            return view('litter_inspect/first_create', compact('dam','dam1','sire1','sire','user','breeders','cities','kennel'));
+                }else{
+                    $sire = Dog::select('id','dog_name')
+                                    ->where('status','=','Active')
+                                    ->where('sex','=','Male')
+                                    ->Orderby('dog_name','ASC')
+                                    ->get();
+                                    $dam = Dog::select('id','dog_name')
+                                    ->where('status','=','Active')
+                                    ->where('sex','=','Female')
+                                    ->Orderby('dog_name','ASC')
+                                    ->get();
+                                    $cities = Cities::get();
+                                    $breeders = User::get();
+                            return view('litter_inspect/first_create', compact('dam','sire','breeders','cities'));
+                }
+        }
+        elseif($curr_date > $request->check_date){
+            $curr_date2 = date_create(date('Y-m-d', strtotime($curr_date. ' + 1 day')));
+            $checkdate = date_create($request->check_date);
+            $diff=date_diff($checkdate,$curr_date2);
+       if($diff->days == 2 || $diff->days < 2){
+            if($user->user_type_id == '1'){
+            $cities = Cities::where('id','=',$user->city)
+                            ->get();
+            $kennel = Kennel::select('kennel_name','prefix','suffix')
+                   ->where('owner_id','=',$user->id)
+                   ->get();
+            $dam = Dog::select('dogs.id','dog_name')
+                    ->where('status','=','Active')
+                    ->where('dog_owners.owner_id',$user->id)
+                    ->leftjoin('dog_owners','dog_owners.dog_id','=','dogs.id')
+                    ->where('sex','=','Female')
+                    ->Orderby('dog_name','ASC')
+                    ->get();
+                if(count($dam) == 0){
+                $dam1 = Dog::select('id','dog_name')
+                                ->where('status','=','Active')
+                                ->where('sex','=','Female')
+                                ->Orderby('dog_name','ASC')
+                                ->get();
+            }else{
+                $dam1 = array();
+            }
+                $sire = Dog::select('dogs.id','dog_name')
+                            ->where('status','=','Active')
+                            ->where('dog_owners.owner_id',$user->id)
+                            ->leftjoin('dog_owners','dog_owners.dog_id','=','dogs.id')
+                            ->where('sex','=','Male')
+                            ->Orderby('dog_name','ASC')
+                            ->get();
+                if(count($sire) == 0){
+                    $sire1 = Dog::select('id','dog_name')
+                                    ->where('status','=','Active')
+                                    ->where('sex','=','Male')
+                                    ->Orderby('dog_name','ASC')
+                                    ->get();
+                }else{
+                    $sire1 = array();
+                }
+                $breeders = array();
+                return view('litter_inspect/first_create', compact('dam','dam1','sire1','sire','user','breeders','cities','kennel'));
+        }
+        else{
+                     $sire = Dog::select('id','dog_name')
+                    ->where('status','=','Active')
+                    ->where('sex','=','Male')
+                    ->Orderby('dog_name','ASC')
+                    ->get();
+                    $dam = Dog::select('id','dog_name')
+                    ->where('status','=','Active')
+                    ->where('sex','=','Female')
+                    ->Orderby('dog_name','ASC')
+                    ->get();
+                    $cities = Cities::get();
+                    $breeders = User::get();
+                    return view('litter_inspect/first_create', compact('dam','sire','breeders','cities'));
+    }
+       }
+   }elseif($curr_date < $request->check_date){
+    return redirect()->route('LitterInspections.create')
+            ->with('danger','Invalid Date Enetered, Please Try Again');
+   }
+    }
+
+    // end
 
     /**
      * Remove the specified resource from storage.

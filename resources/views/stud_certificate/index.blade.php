@@ -52,13 +52,13 @@
                             <td>{{ $i++ }}</td>
                             <td>{{ $cert->sire_dog->dog_name }}</td>
                             <td>{{ $cert->dam_dog->dog_name }}</td>
-                            <td>{{ $cert->mating_date }}</td>
-                            <td>{{ date('d-m-Y', strtotime($cert->created)) }}</td>
+                            <td>{{ date('d-m-Y', strtotime($cert->mating_date)) }}</td>
+                            <td>{{ date('d-m-Y', strtotime($cert->created_at)) }}</td>
                             <td>{{ $cert->user->first_name }}</td>
                             <td><span class="badge badge-secondary">{{ $cert->status }}</span></td>
                             <td class="row-actions">
-                              <a href="{{ route('StudCertificates.edit',$cert->id) }}" data-toggle="tooltip" data-placement="top"
-                                  title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
+                              <!--<a href="{{ route('StudCertificates.edit',$cert->id) }}" data-toggle="tooltip" data-placement="top"
+                                  title="Edit"><i class="os-icon os-icon-ui-49"></i></a>-->
         
         
                                   {!! Form::open(['method' => 'DELETE','route' => ['StudCertificates.destroy', $cert->id],'style'=>'display:inline']) !!}

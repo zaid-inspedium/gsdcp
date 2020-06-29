@@ -28,13 +28,26 @@
           <div class="form-group">
             <label for="">Breeder</label>
            
+          @if($user->user_type_id == 3)
           
-            <select class="form-control select2 selectpicker" data-live-search="true" id="breeder_id" name="breeder_id">
-              <option>- Select Breeder -</option>
-              @foreach($breeders as $breeder)
-                  <option value="{{$breeder->id}}">{{$breeder->first_name}} {{$breeder->last_name}}</option>
-              @endforeach
-            </select>
+          <select class="form-control select2 selectpicker" data-live-search="true" id="breeder_id" name="breeder_id">
+           
+            <option value="{{$breeders->id}}">{{$breeders->first_name}} {{$breeders->last_name}}</option>
+          </select>
+
+          @else
+
+          <select class="form-control select2 selectpicker" data-live-search="true" id="breeder_id" name="breeder_id">
+            <option>- Select Breeder -</option>
+            @foreach($breeders as $breeder)
+                <option value="{{$breeder->id}}">{{$breeder->first_name}} {{$breeder->last_name}}</option>
+            @endforeach
+          </select>
+          
+          @endif
+            
+
+    
           </div>
         </div>
         <div class="col-sm-6">
