@@ -11,6 +11,9 @@ use App\User;
 use App\Kennel;
 use App\StudCertificate;
 use App\LitterDetail;
+use App\ProjectSetting;
+use App\DogOwner;
+use App\LitterInspection;
 
 class LitterRegistrationController extends Controller
 {
@@ -30,11 +33,25 @@ class LitterRegistrationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        $litters = LitterRegistration::orderBy('id', 'DESC')->paginate('50');
+    {  
+        $user = Auth::user();
+        $check_users = ProjectSetting::where('option_name','=','show_all_records')->first();
+        $allowed_users = explode (",", $check_users->option_value);  
+        
         $this->saveActivity('Litter Registration List',$this->module_name);
 
+        if(in_array($user->user_type_id, $allowed_users)){
+            //if user role is one of the allowed user role set by admin
+            $litters = LitterRegistration::orderBy('id', 'DESC')->paginate('50');
+            
+        }else{
+            //show record of logged user only
+            $litters = LitterRegistration::where('created_by','=',$user->id)
+                                            ->orderBy('id', 'DESC')
+                                            ->paginate('50');
+        }
         return view('litter_register.index',compact('litters'));
+        
     }
 
     /**
@@ -44,21 +61,53 @@ class LitterRegistrationController extends Controller
      */
     public function create()
     {
-        $dam = Dog::select('id','dog_name')
-                    ->where('status','=','Active')
-                    ->where('sex','=','Female')
-                    ->Orderby('dog_name','ASC')
-                    ->get();
+        $user = Auth::user();
+        $check_users = ProjectSetting::where('option_name','=','show_all_dogs')->first();
+        $allowed_users = explode (",", $check_users->option_value);
 
-        $sire = Dog::select('id','dog_name')
-                    ->where('status','=','Active')
-                    ->where('sex','=','Male')
-                    ->Orderby('dog_name','ASC')
-                    ->get();
-      
-        $breeders = User::select('id','first_name','last_name')
-                        ->where('status','=','Active')
-                        ->orderBy('first_name', 'ASC')->get();
+        if(in_array($user->user_type_id, $allowed_users)){
+            //if user role is one of the allowed user role set by admin
+    
+            $breeders = User::select('id','first_name','last_name')
+                            ->where('status','=','Active')
+                            ->orderBy('first_name', 'ASC')->get();
+                
+            $dam = Dog::select('id','dog_name')
+                            ->where('status','=','Active')
+                            ->where('sex','=','Female')
+                            ->Orderby('dog_name','ASC')
+                            ->get();
+    
+                    $kennel = "";
+                    $user = Auth::user();
+                   
+    
+            }else{
+                //if logged in user is member
+
+                $breeders = User::select('id','first_name','last_name','city','membership_no')
+                                ->where('status','=','Active')
+                                ->where('id','=',$user->id)
+                                ->Orderby('first_name','ASC')
+                                ->first();
+                
+                $dogowners = DogOwner::select('dog_id')
+                                ->where('owner_id','=',$breeders->id)
+                                ->get();
+
+                $dam = Dog::select('id','dog_name')
+                                ->whereIn('id',$dogowners)
+                                ->where('status','=','Active')
+                                ->Orderby('dog_name','ASC')
+                                ->get();
+        
+            }
+
+            $sire = Dog::select('id','dog_name')
+                            ->where('status','=','Active')
+                            ->where('sex','=','Male')
+                            ->Orderby('dog_name','ASC')
+                            ->get();
 
         return view('litter_register.create',compact('dam','sire','breeders'));
     }
@@ -168,6 +217,7 @@ class LitterRegistrationController extends Controller
 		$value = $request->get('value');
         $dependent = $request->get('dependent');
         $stud = $request->get('stud');
+        $inspection_msg = "";
 
         $certificate_count = StudCertificate::where('sire','=',$stud)
                         ->where('dam','=',$value)
@@ -180,17 +230,45 @@ class LitterRegistrationController extends Controller
             $certificate_msg = '';
         }
 
-        $dam_info = Dog::select('hip','elbows')
+        $is_inspected = LitterInspection::where('sire_id','=',$stud)
+                                                ->where('dam_id','=',$value)
+                                                ->count();
+        if($is_inspected == 0){
+            $inspection_msg = "Litter Inspection not done. Please request litter inspection first";
+
+        }else{
+            $inspection_status = LitterInspection::select('status')->where('sire_id','=',$stud)
+                                ->where('dam_id','=',$value)
+                                ->latest('id')
+                                ->first();
+            if($inspection_status->status == 1){
+                $inspection_msg = "Litter inspection request is pending.Try again later";
+
+            }elseif($inspection_status->status == 4) {
+                $inspection_msg = "Litter inspection request is rejected. Please contact Group Breed Warden";
+            }elseif($inspection_status->status == 3) {
+                $inspection_msg = "Litter inspection request is expired. Please contact Group Breed Warden";
+            }
+            
+        }
+        if($inspection_msg == ""){
+
+            $dam_info = Dog::select('hip','elbows')
                         ->where('id','=',$value)
                         ->first();
 
-        $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
-                    <h4>Dam Info:</h4>
-                    <h5 style="color:red;">'.$certificate_msg.'</h5>
-                    <label><b>HD</b> : '.$dam_info->hip.'</label>
-                    <label><b>ED</b> : '.$dam_info->elbows.'</label>
-                   </div>';
-        
+            $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
+                        <h4>Dam Info:</h4>
+                        <h5 style="color:red;">'.$certificate_msg.'</h5>
+                        <label><b>HD</b> : '.$dam_info->hip.'</label>
+                        <label><b>ED</b> : '.$dam_info->elbows.'</label>
+                        </div>';
+
+        }else{
+            $output = "<script>alert('$inspection_msg')</script>";
+            $output .= "<script> window.history.back(); </script>";
+            
+        }
         echo $output;
 
     }

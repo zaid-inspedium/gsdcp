@@ -1,0 +1,5 @@
+Important to note (development points)
+1.user_type_id in users table is basically role_id which is selected when creating new user.
+2.Software admin role is Administrator , id = 12
+3.Settings are being saved in option table. 
+4.For showing all dogs admin has to defined in option that who can view all dogs in dropdown(on every dog selection dropdown) otherwise only those dogs will appear whose owner is logged in.

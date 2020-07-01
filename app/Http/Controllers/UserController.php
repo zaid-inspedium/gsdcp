@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id','DESC')->paginate(20);
+        $data = User::orderBy('id','ASC')->paginate(20);
         return view('users.index',compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 20);
     }
@@ -63,6 +63,7 @@ class UserController extends Controller
         request()->photo->move(public_path('members\profile_pic'), $imageName);
 
         $user = new User;
+        $user->user_type_id = $request->roles;
         $user->membership_no = $request->membership_no; 
         $user->username = $request->username; 
         $user->password =  Hash::make($request->password);

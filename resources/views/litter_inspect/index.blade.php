@@ -8,7 +8,7 @@
             <div class="content-box">
               <div class="element-wrapper">
                 <h6 class="element-header">
-                  Litter Inspection
+                  Litter Inspection Requests
                 </h6>
                 <div class="element-box">
                   <a href="{{ route('LitterInspections.create') }}" class="btn btn-lg btn-success">
@@ -37,7 +37,8 @@
                           <th>City</th>
                           <th>Group Breed Warden</th>
                           <th>Status</th>
-                          <th>Created</th>
+                          <th>Received on</th>
+                          
                           <th>Actions</th>
                         </tr>
                       </thead>
@@ -52,7 +53,14 @@
                           <td>{{ $inspect->sire_dog->dog_name }}</td>
                           <td>{{ $inspect->dam_dog->dog_name }}</td>
                           <td>{{ $inspect->litter_city->city }}</td>
-                          <td></td>
+                          @if($inspect->updated_by == Null)
+                            <td></td>
+                          @else
+                            <td> {{ ucfirst($inspect->groupBreedWarden->username) }}</td>
+                          @endif
+
+                        
+                          
                           @if($inspect->status == 1)
                           <td>Pending</td>
                           @elseif($inspect->status == 2)
@@ -62,11 +70,15 @@
                           @elseif($inspect->status == 4)
                           <td>Rejected</td>
                           @endif
-                          <td>{{$inspect->created_at}}</td>
+                          <td>{{ $created=date('d-m-Y h:i:s', strtotime($inspect->created_at)) }}</td>
                         
                           <td>
-                          <a href="{{ route('LitterInspections.edit',$inspect->id) }}" data-toggle="tooltip" data-placement="top"
-                          title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
+                            @if($inspect->status != 2)
+                              <a href="{{ route('LitterInspections.edit',$inspect->id) }}" data-toggle="tooltip" data-placement="top"title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
+                            @else
+                            <a href="" data-toggle="tooltip" data-placement="top" title="View"><i class="os-icon os-icon-ui-32">View</i></a>
+                            @endif
+                          
                           {!! Form::open(['method' => 'DELETE','route' => ['LitterInspections.destroy', $inspect->id],'style'=>'display:inline']) !!}
                           {{ Form::button('<i class="os-icon os-icon-ui-15"></i>', ['type' => 'submit', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => 'Delete'] )  }}
                           {!! Form::close() !!}
