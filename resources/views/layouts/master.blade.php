@@ -765,6 +765,14 @@
             </li>
 
             <li class="selected">
+              <a href="/SecondLitterInspections">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Second Litter Inspection</span></a>
+            </li>
+
+            <li class="selected">
               <a href="/Litters">
                 <div class="icon-w">
                   <div class="os-icon os-icon-layout"></div>

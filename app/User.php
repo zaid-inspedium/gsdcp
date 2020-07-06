@@ -49,6 +49,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Countries','country','idCountry'); 
     }
 
+    public function user_kennels()
+    {
+        return $this->hasOne('App\Kennel','owner_id','id'); 
+    }
+
     // public function litters()
     // {
     //     return $this->hasMany('App\LitterInspection','breeder_id'); 

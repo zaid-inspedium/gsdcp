@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class LitterRegistration extends Model
 {
     protected $table = 'litters';
+    protected $fillable = ['owner_id','dob','sire','dam','stud_id','created_by'];
+    
 
     public function litter_owner()
     {

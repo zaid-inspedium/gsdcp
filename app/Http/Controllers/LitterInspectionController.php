@@ -166,9 +166,7 @@ class LitterInspectionController extends Controller
                         </script>';
 
         }
-
         echo $output;
-
     }
 
 

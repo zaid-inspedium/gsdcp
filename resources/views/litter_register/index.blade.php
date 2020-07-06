@@ -62,10 +62,11 @@
                           <td>
                             @if($litter->status == 'Approved')
                                <a href="{{ route('Litters.show',$litter->id) }}" title="View"><i class="os-icon os-icon-ui-37"></i></a>
+                               <a href="Assign-Microships/{{ $litter->id }}"><i class="os-icon os-icon-ui-37"></i></a>
                             @else
                               <a href="{{ route('Litters.edit',$litter->id) }}"><i class="os-icon os-icon-ui-49"></i></a>
                               <a href="{{ route('Litters.show',$litter->id) }}"><i class="os-icon os-icon-ui-37"></i></a>
-                              <a href="{{ route('Litters.microchip',$litter->id) }}"><i class="os-icon os-icon-ui-37"></i></a>
+                              
                             @endif
                           </td>
                         </tr>

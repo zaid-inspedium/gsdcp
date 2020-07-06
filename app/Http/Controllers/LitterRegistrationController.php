@@ -68,15 +68,15 @@ class LitterRegistrationController extends Controller
         if(in_array($user->user_type_id, $allowed_users)){
             //if user role is one of the allowed user role set by admin
     
-            $breeders = User::select('id','first_name','last_name')
-                            ->where('status','=','Active')
-                            ->orderBy('first_name', 'ASC')->get();
-                
-            $dam = Dog::select('id','dog_name')
-                            ->where('status','=','Active')
-                            ->where('sex','=','Female')
-                            ->Orderby('dog_name','ASC')
-                            ->get();
+                    $breeders = User::select('id','first_name','last_name')
+                                    ->where('status','=','Active')
+                                    ->orderBy('first_name', 'ASC')->get();
+                        
+                    $dam = Dog::select('id','dog_name')
+                                    ->where('status','=','Active')
+                                    ->where('sex','=','Female')
+                                    ->Orderby('dog_name','ASC')
+                                    ->get();
     
                     $kennel = "";
                     $user = Auth::user();
@@ -100,7 +100,7 @@ class LitterRegistrationController extends Controller
                                 ->where('status','=','Active')
                                 ->Orderby('dog_name','ASC')
                                 ->get();
-        
+                $user = $breeders;
             }
 
             $sire = Dog::select('id','dog_name')
@@ -109,7 +109,7 @@ class LitterRegistrationController extends Controller
                             ->Orderby('dog_name','ASC')
                             ->get();
 
-        return view('litter_register.create',compact('dam','sire','breeders'));
+        return view('litter_register.create',compact('dam','sire','breeders','user'));
     }
 
     /**
@@ -120,7 +120,76 @@ class LitterRegistrationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->owner_id == 0 || $request->sire == 0 || $request->dam == 0){
+            return redirect()
+                    ->route('Litters.create')
+                    ->with('danger','Failed to Save! Please fill out complete form');
+
+        }else{
+
+            LitterRegistration::create($request->all());
+            $master_id = LitterRegistration::latest('id')->first();
+
+            $dog_name = $request->dog_name;
+            $gender = $request->gender;
+            $color = $request->color_markings;
+            $puppy_name = $request->puppy_name;
+
+            $keysOne = array_keys($dog_name);
+            $keysTwo = array_keys($gender);
+            $keysThree = array_keys($color);
+            $keysFour = array_keys($puppy_name);
+
+            $min = min(count($dog_name), count($color));
+
+            for($i = 0; $i < $min; $i++) {
+
+                if(array_key_exists($keysOne[$i], $dog_name)){
+                    if(array_key_exists($keysTwo[$i], $gender)){
+                        if(array_key_exists($keysThree[$i], $color)){
+                            if(array_key_exists($keysFour[$i], $puppy_name)){
+                                
+                             
+                                if($dog_name[$keysOne[$i]] != ""){
+
+                                    $puppy_full_name = str_replace(' ', '', $puppy_name[$keysFour[$i]]);
+                                    $check_puppy = LitterDetail::where('puppy_full_name','=',$puppy_full_name)
+                                                            ->count();
+
+                                    if($check_puppy == 0){
+                                        $task2 = new LitterDetail;   
+                                        $task2->litter_id = $master_id->id;
+                                        $task2->name = $dog_name[$keysOne[$i]];
+                                        $task2->puppy_full_name = $puppy_full_name;
+                                        $task2->sex = $gender[$keysTwo[$i]];
+                                        $task2->color = $color[$keysThree[$i]];
+                                        
+                                        $task2->save();         
+                                    }else{
+                                        
+                                        LitterDetail::where('litter_id','=',$master_id->id)->delete();
+                                        $litter_reg = LitterRegistration::findOrFail($master_id->id);
+                                        $litter_reg->delete();
+
+                                        return redirect()
+                                            ->route('Litters.create')
+                                            ->with('danger','Failed to Save! Litter "'.$puppy_full_name.'" already exist');
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+               
+            }
+            $this->saveActivity('Litter Registration Request',$this->module_name,"Create new record");
+
+            return redirect()->route('Litters.index')
+                        ->with('success','Record Saved.');
+
+        }
+        
     }
 
     /**
@@ -132,6 +201,30 @@ class LitterRegistrationController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function microchip($id){
+
+        $litters = LitterRegistration::where('status','=','Approved')
+                                    ->where('id','=',$id)
+                                    ->first();
+        $litter_details = LitterDetail::where('litter_id','=',$litters->id)
+                                        ->get();
+        $microchips = ''; 
+
+        $user = Auth::user();
+
+        // $litters = DB::select(DB::raw("SELECT DISTINCT * FROM litters 
+        //     LEFT JOIN litter_details ON litter_details.litter_id = litters.id
+        //     LEFT JOIN users_old ON users_old.id = litters.owner_id
+        //     WHERE litters.id = '".$id."' "));
+
+        // $dogs = Dogs::get();
+        // $studs = DB::select(DB::raw("SELECT dam, sire, mating_date FROM stud_certificate"));
+        // $microchips = DB::select(DB::raw("SELECT * FROM microchips WHERE status != 3"));
+
+         return view('litter_register/assign_microchip', compact('litters','litter_details','microchips','user'));
+
     }
 
     public function fetch_kennel(Request $request){
@@ -152,8 +245,8 @@ class LitterRegistrationController extends Controller
                         ->where('owner_id','=',$value)
                         ->first();
             $kennel_name = $kennels->kennel_name;
-            $kennel_prefix = $kennels->prefix;
-            $kennel_suffix = $kennels->suffix;
+            $kennel_prefix = ($kennels->prefix == '' ? ' ' : $kennels->prefix);
+            $kennel_suffix = ($kennels->suffix == '' ? ' ' : $kennels->suffix);
         }
 
         $litters_count = LitterRegistration::where('owner_id','=',$value)
@@ -164,7 +257,10 @@ class LitterRegistrationController extends Controller
                             ->latest('id')
                             ->first();
             
-            $previous_litter = $litter_data->litter_detail[0]->name;
+            if(isset($litter_data->litter_detail[0])){
+                $previous_litter = $litter_data->litter_detail[0]->name;
+            }
+            
         }
 
 
@@ -174,6 +270,8 @@ class LitterRegistrationController extends Controller
                              <span>'.$kennel_name.'</span>
                         <br>
                         <label><strong>Suffix / Prefix:</strong></label>
+                            <input type="hidden" value=" '.$kennel_suffix.'" id="suffix" />
+                            <input type="hidden" value="'.$kennel_prefix.'" id="prefix" />
                             <span>'.$kennel_suffix.' / '.$kennel_prefix.'</span>
                     </div>';
         if($member_balance < 0){
@@ -225,9 +323,18 @@ class LitterRegistrationController extends Controller
 
         if($certificate_count == 0){
             $certificate_msg = 'No Stud Certificate Found';
+            $output = "<input type='hidden' value='0' name='stud_id'>";
 
         }else{
+
+            $certificates = StudCertificate::select('id')
+            ->where('sire','=',$stud)
+            ->where('dam','=',$value)
+            ->latest('id')
+            ->first();
+
             $certificate_msg = '';
+            $output = "<input type='hidden' value='".$certificates->id."' name='stud_id'>";
         }
 
         $is_inspected = LitterInspection::where('sire_id','=',$stud)
@@ -257,7 +364,7 @@ class LitterRegistrationController extends Controller
                         ->where('id','=',$value)
                         ->first();
 
-            $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
+            $output .= '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
                         <h4>Dam Info:</h4>
                         <h5 style="color:red;">'.$certificate_msg.'</h5>
                         <label><b>HD</b> : '.$dam_info->hip.'</label>
@@ -265,7 +372,7 @@ class LitterRegistrationController extends Controller
                         </div>';
 
         }else{
-            $output = "<script>alert('$inspection_msg')</script>";
+            $output .= "<script>alert('$inspection_msg')</script>";
             $output .= "<script> window.history.back(); </script>";
             
         }
@@ -296,12 +403,21 @@ class LitterRegistrationController extends Controller
         }else{
             $mating_date_msg = '';
         }
+        if($mating_date_msg != ''){
 
-        $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
+            $output = '<div style="padding:10px 0 0 20px;" class="form-group alert-warning">
                     <h4>Mating Date Info:</h4>
                     <h5 style="color:red;">'.$mating_date_msg.'</h5>
-         
                    </div>';
+            $output .= '<script type="text/javascript">
+                    document.getElementById("btnsubmit").disabled = true 
+                </script>';
+        }else{
+            $output = '';
+            $output .= '<script type="text/javascript">
+                    document.getElementById("btnsubmit").disabled = false 
+                </script>';
+        }
         
         echo $output;
 
@@ -338,6 +454,6 @@ class LitterRegistrationController extends Controller
      */
     public function destroy($id)
     {
-        //
+       
     }
 }

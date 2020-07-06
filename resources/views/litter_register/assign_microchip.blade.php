@@ -1,73 +1,66 @@
 @extends('layouts.master')
 
 @section('content')
-  <!--------------------
-          START - Breadcrumbs
-          -------------------->
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="index.html">Home</a>
-        </li>
-        <li class="breadcrumb-item">
-          <a href="index.html">Products</a>
-        </li>
-        <li class="breadcrumb-item">
-          <span>Laptop with retina screen</span>
-        </li>
-      </ul>
-      <!--------------------
-      END - Breadcrumbs
-      -------------------->
       <div class="content-i">
             <div class="content-box"><div class="row">
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Litter Registeration - View
+        Litter Registeration - Microchips Assign
       </h6>
+      @if ($message = Session::get('success'))
+        <p></p>
+          <div class="alert alert-success" id="msg">
+              <p>{{ $message }}</p>
+          </div>
+        @elseif ($message = Session::get('danger'))
+          <div class="alert alert-danger" id="msg">
+              <p>{{ $message }}</p>
+          </div>
+        @endif
       <div class="element-box">
           <div class="row">
             <div class="col-sm-6">
           <div class="form-group">
-                <label><strong>Name Of Breeder:</strong></label> <span>{{$litters[0]->first_name}} {{$litters[0]->last_name}}</span>
+                <label><strong>Name Of Breeder:</strong></label> <span>{{ $litters->litter_owner->first_name }} {{ $litters->litter_owner->last_name }}</span>
           </div>
 </div>
         <div class="col-sm-6">
           <div class="form-group">
-            <label for=""><strong>Address:</strong></label> <span>{{$litters[0]->address}}</span>
+            <label for=""><strong>Address:</strong></label> <span>{{ $litters->litter_owner->address }}</span>
           </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6">
           <div class="form-group">
-            <label for=""><strong>Phone #:</strong></label> <span>{{$litters[0]->phone}}</span>
+            <label for=""><strong>Phone #:</strong></label> <span>{{ $litters->litter_owner->phone }}</span>
           </div>
           </div>
             <div class="col-sm-6">
           <div class="form-group">
-                <label><strong>Email:</strong></label> <span>{{$litters[0]->email}}</span>
+                <label><strong>Email:</strong></label> <span>{{ $litters->litter_owner->email}}</span>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
-            <label for=""><strong>Kennel:</strong></label> <span>{{$litters[0]->kennel_name}}</span>
+            <label for=""><strong>Kennel:</strong></label> <span>{{ $litters->litter_owner->user_kennels->kennel_name}}</span>
           </div>
           </div>
 
           <!-- print either Prefix or Suffix based on the data is stored -->
-@if(!empty($litters[0]->prefix))
+@if(!empty( $litters->litter_owner->user_kennels->prefix ))
             <div class="col-sm-6">
               <div class="form-group">
-                <label for=""><strong>Prefix:</strong></label> <span>{{$litters[0]->prefix}}</span>
+                <label for=""><strong>Prefix:</strong></label> <span>{{ $litters->litter_owner->user_kennels->prefix }}</span>
               </div>
             </div>
             @else
             <div class="col-sm-6">
           <div class="form-group">
-            <label for=""><strong>Suffix:</strong></label> <span>{{$litters[0]->suffix}}</span>
+            <label for=""><strong>Suffix:</strong></label> <span>{{ $litters->litter_owner->user_kennels->suffix }}</span>
           </div>
           </div>
           @endif
@@ -77,48 +70,42 @@
           <div class="row">
           <div class="col-sm-6">
           <div class="form-group">
-            <@foreach($dogs as $dog)
-            @if($litters[0]->sire == $dog->id)
-            <label for=""><strong>Sire: </strong></label> <span>{{$dog->dog_name}} &nbsp;{{$dog->dob}} | DNA Status : 
-            @if($dog->DNA_status == 1)
+            <label for=""><strong>Sire: &nbsp;&nbsp;</strong></label>{{ $litters->litter_sire->dog_name }} | DNA Status : 
+            @if($litters->litter_sire->DNA_status == 'Proven')
             <span class="badge badge-important" style="color:white;background-color: green;">Proven</span>
-            @elseif($dog->DNA_status == 2)
+            @elseif($litters->litter_sire->DNA_status == 'Stored')
             <span class="badge badge-important" style="color:white;background-color: blue;">Stored</span>
-            @elseif($dog->DNA_status == 3)
+            @elseif($litters->litter_sire->DNA_status == 'Repeat')
             <span class="badge badge-important" style="color:white;background-color: orange;">Repeat</span>
-            @elseif($dog->DNA_status == 4)
+            @elseif($litters->litter_sire->DNA_status == 'Applied For')
             <span class="badge badge-important" style="color:white;background-color: blue;">Applied For</span>
-            @elseif($dog->DNA_status == 5)
+            @elseif($litters->litter_sire->DNA_status == 'Not Available')
             <span class="badge badge-important" style="color:white;background-color: red;">Not Available</span>
-            @elseif($dog->DNA_status == 6)
+            @elseif($litters->litter_sire->DNA_status == 'Not Proven')
             <span class="badge badge-important" style="color:white;background-color: red;">Not Proven</span>
             @endif
-            @endif
-            @endforeach
           </div>
         </div>
+
         <div class="col-sm-6">
           <div class="form-group">
-            @foreach($dogs as $dog)
-            @if($litters[0]->dam == $dog->id)
-            <label for=""><strong>Sire: </strong></label> <span>{{$dog->dog_name}} &nbsp;{{$dog->dob}} | DNA Status : 
-            @if($dog->DNA_status == 1)
+            <label for=""><strong>Dam: &nbsp;&nbsp;</strong></label>{{ $litters->litter_dam->dog_name }} | DNA Status : 
+            @if($litters->litter_dam->DNA_status == 'Proven')
             <span class="badge badge-important" style="color:white;background-color: green;">Proven</span>
-            @elseif($dog->DNA_status == 2)
+            @elseif($litters->litter_dam->DNA_status == 'Stored')
             <span class="badge badge-important" style="color:white;background-color: blue;">Stored</span>
-            @elseif($dog->DNA_status == 3)
+            @elseif($litters->litter_dam->DNA_status == 'Repeat')
             <span class="badge badge-important" style="color:white;background-color: orange;">Repeat</span>
-            @elseif($dog->DNA_status == 4)
+            @elseif($litters->litter_dam->DNA_status == 'Applied For')
             <span class="badge badge-important" style="color:white;background-color: blue;">Applied For</span>
-            @elseif($dog->DNA_status == 5)
+            @elseif($litters->litter_dam->DNA_status == 'Not Available')
             <span class="badge badge-important" style="color:white;background-color: red;">Not Available</span>
-            @elseif($dog->DNA_status == 6)
+            @elseif($litters->litter_dam->DNA_status == 'Not Proven')
             <span class="badge badge-important" style="color:white;background-color: red;">Not Proven</span>
             @endif
-            @endif
-            @endforeach
           </div>
         </div>
+
       </div>
           <br>
 
@@ -126,16 +113,12 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-               @foreach($studs as $stud)
-                @if($litters[0]->sire == $stud->sire && $litters[0]->dam == $stud->dam)
-                <label for=""><strong>Mating Date: </strong></label> <span>{{ $stud->mating_date }}</span>
-                @endif
-                @endforeach
+                <label for=""><strong>Mating Date: </strong></label> <span>{{ $litters->litter_studcertificate->mating_date }}</span>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
-                <label for=""><strong>Litters Whelping Date: </strong></label> <span>{{$litters[0]->dob}}</span>
+                <label for=""><strong>Litters Whelping Date: </strong></label> <span>{{ $litters->dob }}</span>
               </div>
             </div>
           </div>
@@ -155,29 +138,15 @@
                        </tr>
                       </thead>
                       <tbody>
-                          @for($j = 0; $j < count($litters); $j++)
+                        @foreach($litter_details as $puppies)
                         <tr>
-                          @foreach($kennel as $kennels)
-                          @if($kennels->user_id == $litters[$j]->owner_id)
-                          @if(!empty($kennels->prefix))
-                          <td><span>{{ $kennels->prefix }} {{$litters[$j]->name}}</span></td>
-                          @else
-                          <td><span>{{$litters[$j]->name}} {{ $kennels->suffix }}</span></td>
-                          @endif
-                          @endif
-                          @endforeach
-                          @if($litters[$j]->sex == 1)
-                          <td><span>Male</span></td>
-                          @else
-                          <td><span>Female</span></td>
-                          @endif
-                          <td><input type="checkbox" class="form-control"/></td>
+                          <td><span>{{ $puppies->name }}</span></td>
+                          <td><span>{{ $puppies->sex }}</span></td>
+                          <td><span>{{ $puppies->DNA_taken }}</span></td>
                           <td>
                             <select class="form-control">
                               <option>- Select One -</option>
-                              @foreach($microchips as $microchip)
-                              <option value="{{$microchip->id}}">{{$microchip->microchip}}</option>
-                              @endforeach
+                              
                             </select>
                           </td>
                           <td>
@@ -187,16 +156,10 @@
                               <option>Long Stock hair</option>
                             </select>
                           </td>
-                          <td>
-                            <select class="form-control">
-                              <option>- Select One -</option>
-                              <option>Black - Tan</option>
-                              <option>Black - Gold</option>
-                              <option>Black - Brown</option>
-                            </select>
-                          </td>
+                          <td><span>{{ $puppies->color }}</span></td>
+                  
                         </tr>
-                        @endfor
+                        @endforeach
                         </tbody>
                     </table>
                   </div>
