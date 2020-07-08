@@ -8,6 +8,7 @@ use Auth;
 use App\ProjectSetting;
 use App\Traits\UserActivityLog;
 use App\LitterInspection;
+use App\Kennel;
 
 class LitterInspectionSecondController extends Controller
 {
@@ -47,6 +48,118 @@ class LitterInspectionSecondController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function fetch_inspection(Request $request){
+        $select = $request->get('select');
+		$value = $request->get('value');
+        $dependent = $request->get('dependent');
+
+        $inspection_detail = LitterInspection::select('id','breeder_id','sire_id','dam_id','whelping_date','mating_date','city_id','status')
+                            ->where('id','=',$value)
+                            ->first();
+
+        $kennel_count = Kennel::select('kennel_name','prefix','suffix')
+        ->where('owner_id','=',$inspection_detail->breeder_id)
+        ->count();
+
+        if($kennel_count == 0){
+            $kennel = "";
+        }else{
+            $kennel = Kennel::select('kennel_name','prefix','suffix')
+                    ->where('owner_id','=',$inspection_detail->breeder_id)
+                    ->first();
+            $kennel = ($kennel->prefix != "") ? $kennel->prefix : $kennel->suffix;
+        }
+        
+        $output = '<div class="element-box-content">
+        <div class="alert alert-success" role="alert">
+        <input type="hidden" name="breeder_id" value="'.$inspection_detail->breeder->id.'"/>
+        <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+            <label for="">Sire:</label>
+            <label for=""><b>'.$inspection_detail->sire_dog->dog_name.'</b></label>
+            <input type="hidden" name="sire" value="'.$inspection_detail->sire_dog->id.'"/>
+            <br>
+            <label for="">KCP No:</label>
+            <label for=""><b>'.$inspection_detail->sire_dog->KP.'</b></label>
+            <br>
+            <label for="">Breed Survey:</label>
+            <label for=""><b>'.$inspection_detail->sire_dog->breed_survey_done.'</b></label>
+          </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+            <label for="">Dam:</label>
+            <label for=""><b>'.$inspection_detail->dam_dog->dog_name.'</b></label>
+            <input type="hidden" name="dam" value="'.$inspection_detail->dam_dog->id.'"/>
+            <br>
+            <label for="">KCP No:</label>
+            <label for=""><b>'.$inspection_detail->dam_dog->KP.'</b></label>
+            <br>
+            <label for="">Breed Survey:</label>
+            <label for=""><b>'.$inspection_detail->dam_dog->breed_survey_done.'</b></label>
+         </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="">Dam:</label>
+                <label for=""><b>'.$inspection_detail->dam_dog->dog_name.'</b></label>
+                <br>
+                <label for="">KCP No:</label>
+                <label for=""><b>'.$inspection_detail->dam_dog->KP.'</b></label>
+                <br>
+                <label for="">Breed Survey:</label>
+                <label for=""><b>'.$inspection_detail->dam_dog->breed_survey_done.'</b></label>
+            </div>
+        </div>
+  
+
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="">Breeder: </label>
+            <label for=""><b>'.$inspection_detail->breeder->first_name.'</b></label>
+            <br>
+                <label for="">Kennel:</label>
+                <label for=""><b>'.$kennel.'</b></label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+            <label for="">Whelping Date:</label>
+            <label for=""><b>'.$inspection_detail->whelping_date.'</b></label>
+            <br>
+            <label for="">Mating Date:</label>
+            <label for=""><b>'.$inspection_detail->mating_date.'</b></label>
+          </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+            <label for="">Litter Size(Born):</label>
+            <input type="text" name="born_size" class="form-control" style="width:100px;"/>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+            <label for="">Litter Size(Dead):</label>
+            <input type="text" name="dead_size" class="form-control" style="width:100px;"/>
+          </div>
+        </div>
+    </div>
+    </div>
+        </div>';
+
+        $output .= '<script type="text/javascript">
+        document.getElementById("btnsubmit").disabled = false 
+      </script>';
+
+      echo $output;
+
+    }
+
     public function create()
     {
         $user = Auth::user();
@@ -57,6 +170,7 @@ class LitterInspectionSecondController extends Controller
         return view('litter_inspect_second.create',compact('littersinspection','user'));
 
     }
+
 
     /**
      * Store a newly created resource in storage.

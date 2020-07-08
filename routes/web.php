@@ -52,6 +52,7 @@ Route::get('Assign-Microships/{id}','LitterRegistrationController@microchip');
 Route::get('/dynamic_dependent/breeder_info','LitterInspectionController@breeder_info')->name('dynamicdependent.breeder_info');
 Route::get('/dynamic_dependent/breeder_dam','LitterInspectionController@breeder_dam')->name('dynamicdependent.breeder_dam');
 Route::get('/dynamic_dependent/checkcertificate','LitterInspectionController@checkcertificate')->name('dynamicdependent.checkcertificate');
+Route::get('/dynamic_dependent/fetch_inspection','LitterInspectionSecondController@fetch_inspection')->name('dynamicdependent.fetch_inspection');
 Route::get('/print_pedigree_front/{id}','DogsController@print_front');
 Route::get('/print_pedigree_back/{id}','DogsController@print_back');
 Route::get('/view_pedigree/{id}','DogsController@pedigree');
