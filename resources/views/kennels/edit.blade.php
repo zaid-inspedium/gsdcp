@@ -7,7 +7,10 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Kennels - Update
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+        &nbsp; Kennels - Update
       </h6>
       <div class="element-box">
         <form action="{{ route('Kennels.update',$kennel->id) }}" method="POST" id="formValidate">
@@ -68,9 +71,9 @@
           <div class="form-buttons-w">
           	<button class="btn btn-primary" type="submit"> Submit</button>
           	<button class="btn btn-secondary" type="reset"> Reset</button>
-	        <a type="button" href="{{ route('Kennels.index') }}" class="btn btn-danger">
-	          Cancel
-	        </a>
+	          <a action="back" href="javascript: window.history.back();" class="btn btn-danger">
+              <i class="fa fa-times"> </i><span> &nbsp; Cancel</span>
+            </a>
           </div>
         </form>
       </div>

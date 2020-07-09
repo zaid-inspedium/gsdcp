@@ -7,16 +7,13 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Edit Roles
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+        &nbsp; Edit Roles
       </h6>
 
       <div class="element-box">
-        <div class="pull-left">
-            <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
-        </div>
-        <br>
-        <br>
-        <br>
         <br>
 
 

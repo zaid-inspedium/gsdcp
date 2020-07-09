@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Kennel;
 use Auth;
 use App\User;
+use App\Traits\UserActivityLog;
 
 class KennelController extends Controller
 {
+    use UserActivityLog;
+    public $module_name = "kennel";
     /**
      * Display a listing of the resource.
      *
@@ -20,13 +23,15 @@ class KennelController extends Controller
          $this->middleware('permission:kennel-list');
          $this->middleware('permission:kennel-create', ['only' => ['create','store']]);
          $this->middleware('permission:kennel-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:kennel-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:kennel-delete', ['only' => ['update_status']]);
     }
 
     public function index()
     {
         $user = Auth()->user();
-        $kennels = Kennel::orderBy('id', 'DESC')->paginate('50');
+        $kennels = Kennel::where('is_deleted','=','0')->orderBy('id', 'DESC')->paginate('50');
+        $this->saveActivity('Kennel List',$this->module_name);
+
         return view('kennels.index',compact('kennels','user'));
     }
 
@@ -62,6 +67,8 @@ class KennelController extends Controller
         if($owner_ID != 0){
 
             Kennel::create($request->all());
+            $this->saveActivity('Kennel Save',$this->module_name,"Create new record  ".$request->input('kennel_name')." ");
+
             return redirect()->route('Kennels.index')
                         ->with('success','Record Created.');
 
@@ -107,6 +114,8 @@ class KennelController extends Controller
     {
         $kennel = Kennel::findOrFail($id);
         $kennel->update($request->all());
+
+        $this->saveActivity('Update Record',$this->module_name);
         return redirect()->route('Kennels.index')
             ->with('success','Record Updated');
     }
@@ -119,9 +128,16 @@ class KennelController extends Controller
      */
     public function destroy($id)
     {
-        $kennel = Kennel::findOrFail($id);
-        $kennel->delete();
-        return redirect()->route('Kennels.index')
-            ->with('danger','Record Removed');
+        // $kennel = Kennel::findOrFail($id);
+        // $kennel->delete();
+        // return redirect()->route('Kennels.index')
+        //     ->with('danger','Record Removed');
+    }
+    public function update_status($id)
+    {
+      $kennel = Kennel::findOrFail($id);
+      $kennel->is_deleted = 1;
+      $kennel->update();
+      $this->saveActivity('Kennel Delete',$this->module_name);
     }
 }

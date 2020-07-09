@@ -13,11 +13,14 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Dogs - Form
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+        &nbsp; Dogs - Form
       </h6>
 
       <div class="element-box">
-        <form action="{{ route('Dogs.update',$dog->id) }}" method="POST" id="formValidate" enctype="multipart/form-data">
+        <form action="{{ route('Dog.update',$dog->id) }}" method="POST" id="formValidate" enctype="multipart/form-data">
         @csrf
         @method('PUT')
           <legend><span><button onclick="myFunction()" class="btn btn-primary mr-2 inline-block" type="button">Dog Entry</button></span></legend>
@@ -28,7 +31,7 @@
             <label class="col-form-label col-sm-2 h6"> Dog Name</label>
             <div class="col-sm-3">
               <input type="hidden" name="friendly_URL" id="friendly_URL" value="{{ $dog->friendly_URL }}">
-              <input id="dog_name" name="dog_name" class="form-control" data-error="Please input dog name" placeholder="Enter Dog's Name" required="required" type="text" value="{{ $dog->dog_name }}" onkeyup="Friendly_URLFunction()">
+              <input id="dog_name" name="dog_name" class="form-control no-drop" data-error="Please input dog name" placeholder="Enter Dog's Name" required="required" type="text" value="{{ $dog->dog_name }}" readonly="readonly">
               <div class="help-block form-text with-errors form-control-feedback"></div>
             </div>
             <div class="col-sm-2"><span class="text-danger h4" data-toggle="tooltip" data-placement="top" 
@@ -189,7 +192,7 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Owner</label>
             <div class="col-sm-3">
-              <select class="form-control select2" name="owner_id[]" id="owner_id" style="width: 290px;" multiple="true">
+              <select class="form-control select2" name="owner_id[]" id="owner_id" style="width: 260px;" multiple="true">
                 <option>
                   Select One
                 </option>
@@ -1237,8 +1240,8 @@
           <div class="form-buttons-w">
             <button class="btn btn-primary" type="submit"> Submit</button>
             <button class="btn btn-secondary" type="reset"> Reset</button>
-            <a type="button" href="{{ route('Dogs.index') }}" class="btn btn-white">
-              Cancel
+            <a action="back" href="javascript: window.history.back();" class="btn btn-danger">
+              <i class="fa fa-times"> </i><span> &nbsp; Cancel</span>
             </a>
           </div>
         </form>

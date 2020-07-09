@@ -2,6 +2,8 @@
 <style type="text/css">
 .pointer {cursor: pointer;}
 </style>
+<link href="https://cdn.jsdelivr.net/gh/xxjapp/xdialog@3/xdialog.min.css" rel="stylesheet"/>
+<link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @section('content')
   <div class="content-i">
     <div class="content-box">
@@ -34,31 +36,19 @@
             <!-- <a href="https://www.datatables.net/" target="_blank">Learn More about DataTables</a> -->
           </div>
           <div class="table-responsive">
-            <table id="dataTable1" width="100%" class="table table-striped table-bordered table-lightfont">
+            <table id="dataTable1" width="100%" class="table table-sm table-striped table-bordered table-lightfont">
             	<thead>
             		<tr>
-            			<th style="width:  4.33%">S.no</th>
-            			<th>Start Range</th>
-            			<th>End Range</th>
-                  <th>Last Issued No</th>
-                  <th>Issued Date</th>
-                  <th>Created</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+            			<th class="text-primary" style="width: 4.33%">S.no</th>
+            			<th class="text-primary">Start Range</th>
+            			<th class="text-primary">End Range</th>
+                  <th class="text-primary">Last Issued No</th>
+                  <th class="text-primary">Issued Date</th>
+                  <th class="text-primary">Created</th>
+                  <th class="text-primary">Status</th>
+                  <th class="text-primary">Actions</th>
             		</tr>
             	</thead>
-            	<tfoot>
-            		<tr>
-            			<th style="width:  4.33%">S.no</th>
-            			<th>Start Range</th>
-                  <th>End Range</th>
-                  <th>Last Issued No</th>
-                  <th>Issued Date</th>
-                  <th>Created</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-            		</tr>
-            	</tfoot>
             	<tbody>
             		<?php
       					 $i = 1;
@@ -73,28 +63,13 @@
                     <td>{{ $created=date('d-m-Y h:i:s', strtotime($kcp->created_at)) }}</td>
                     <td><span class="badge badge-secondary">{{ $kcp->status }}</span></td>
 
-                  
-
-
-                      <!-- <div class="btn-group d-inline-block">
-        						  <a href="{{ route('KCPNumber.edit',$kcp->id) }}" class="btn btn-primary" data-toggle="tooltip" data-placement="top"
-                          title="Edit">
-        						    <i class="fa fa-pencil"></i>
-        						  </a>
-                      <a><button class="btn btn-danger" onclick="deleteData({{$kcp->id}})" type="submit" data-id="{{$kcp->id}}" data-toggle="tooltip" data-placement="top"
-                          title="Delete"><i class="fa fa-trash-o"></i></button></a>
-        					  </div> -->
                     <td class="row-actions">
                       <a href="{{ route('KCPNumber.edit',$kcp->id) }}" data-toggle="tooltip" data-placement="top"
                           title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
-
-
-                          {!! Form::open(['method' => 'DELETE','route' => ['KCPNumber.destroy', $kcp->id],'style'=>'display:inline']) !!}
-                          {{ Form::button('<i class="os-icon os-icon-ui-15"></i>', ['type' => 'submit', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => 'Delete'] )  }}
-                          {!! Form::close() !!}
-
-                    
+                      <a class="danger pointer" onclick="deleteData({{$kcp->id}})" type="submit" data-id="{{$kcp->id}}" data-toggle="tooltip" data-placement="top"
+                          title="Delete"><i class="os-icon os-icon-ui-15"></i></a>
                     </td>
+
                 	</tr>
             		@endforeach 
             	</tbody>
@@ -105,7 +80,7 @@
       </div>
     </div>
   </div>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
     function deleteData(id){
         swal({
@@ -118,9 +93,9 @@
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url : "{{ url('/destroy')}}" + '/' + id,
+                    url : "{{ url('/KCPNumberStatusUpdate')}}" + '/' + id,
                     type : "GET",
-                    data : {'_method' : 'DELETE'},
+                    data : {'_method' : 'PUT'},
                     success: function(data){
                         swal("Done! Record successfully deleted!", {
                         icon: "success",

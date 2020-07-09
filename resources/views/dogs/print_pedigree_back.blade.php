@@ -79,7 +79,7 @@
     }
     .page2{
         /*background: url("http://localhost/gsdcp/pedigree-inside-72.jpg") no-repeat;*/
-        background: url("{{asset('assets/admin/img/pedigree-inside.jpg')}}") no-repeat;
+        background: url("{{asset('admin/img/pedigree-inside.jpg')}}") no-repeat;
         background-size: 100% 100%;
         height: 11.69in;
         width: 100%

@@ -10,9 +10,20 @@ use Hash;
 use App\Countries;
 use App\Cities;
 use Auth;
+use App\Traits\UserActivityLog;
 
 class UserController extends Controller
 {
+    use UserActivityLog;
+    public $module_name = "users";
+
+    function __construct()
+    {
+         $this->middleware('permission:users-list');
+         $this->middleware('permission:users-create', ['only' => ['create','store']]);
+         $this->middleware('permission:users-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:users-delete', ['only' => ['update_status']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +31,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id','ASC')->paginate(20);
+        $data = User::where('status','=','Active')->orderBy('id','ASC')->paginate(20);
+        $this->saveActivity('Users List',$this->module_name);
+
         return view('users.index',compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 20);
     }
@@ -86,7 +99,7 @@ class UserController extends Controller
         //$user = User::create($input);
         $user->assignRole($request->input('roles'));
 
-
+        $this->saveActivity('New User',$this->module_name,"Create new record  ".$request->input('username')." ");
         return redirect()->route('users.index')
                         ->with('success','User created successfully');
     }
@@ -102,11 +115,34 @@ class UserController extends Controller
         $user = User::find($id);
         return view('users.show',compact('user'));
     }
+    public function show_files($id)
+    {
+        $file = DB::select(DB::raw("SELECT * FROM user_files WHERE id = '".$id."' "));
+        return view('users.show_file',compact('file'));
+    }
+
+
+    public function save_files(request $request)
+    {
+        $files1 = request()->fileselect;
+        $id = request()->idd;
+        foreach($files1 as $file){
+            $fileName = time().'.'.$file->getClientOriginalName();
+            $file->move(public_path('members/member_files'), $fileName);
+            $images_name[] = $fileName;
+            $save_file = DB::insert(DB::raw("INSERT INTO user_files (user_id,file_name)
+                VALUES('".$id."','".$fileName."')"));
+        }
+
+        return redirect()->back()->with('success','File(s) Saved successfully');
+        
+    }
 
     public function member_files($id)
     {
         $user = User::find($id);
-        return view('users.member_files',compact('user'));
+        $mem_files = DB::select(DB::raw("SELECT * FROM user_files WHERE user_id = '".$id."' "));
+        return view('users.member_files',compact('user','mem_files'));
     }
 
     /**
@@ -198,6 +234,7 @@ class UserController extends Controller
         $user->assignRole($request->input('roles'));
 
 
+        $this->saveActivity('Update Record',$this->module_name);
         return redirect()->route('users.index')
                         ->with('success','User updated successfully');
     }
@@ -213,5 +250,20 @@ class UserController extends Controller
         User::find($id)->delete();
         return redirect()->route('users.index')
                         ->with('success','User deleted successfully');
+    }
+
+    public function destroy_files($id)
+    {
+        $delete = DB::select(DB::raw("DELETE FROM user_files WHERE id = '".$id."' "));
+        return redirect()->route('users.index')
+                        ->with('success','File(s) deleted successfully');
+    }
+
+    public function update_status($id)
+    {
+      $update_user = User::findOrFail($id);
+      $update_user->status = 'Inactive';
+      $update_user->update();
+      $this->saveActivity('User Delete',$this->module_name);
     }
 }

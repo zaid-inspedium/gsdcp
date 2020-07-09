@@ -166,7 +166,9 @@ $(function () {
     $('#formValidate').validator();
   }
   if ($('#dataTable1').length) {
-    $('#dataTable1').DataTable({ buttons: ['copy', 'excel', 'pdf'] });
+    $('#dataTable1').DataTable({
+      pageLength : 20,
+     buttons: ['copy', 'excel', 'pdf'] });
   }
   if ($('#dataTable2').length) {
     $('#dataTable2').DataTable({ buttons: ['copy', 'excel', 'pdf'] });

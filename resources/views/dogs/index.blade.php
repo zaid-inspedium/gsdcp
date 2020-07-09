@@ -8,11 +8,6 @@
 
 <div id="content">
 <div class="wrapper">
-<div class="page-header">
-<h5 class="widget-name">
-Dogs </h5>
-</div>
-
 <div class="content-i">
             <div class="content-box">
               <div class="element-wrapper">
@@ -22,16 +17,17 @@ Dogs </h5>
                 <div class="element-box">
                   <h5 class="form-header">
                     Dogs - List
+                    <div style="float: right; padding-top:  -30px;">
+                      <a href="{{ url('/DNAResults') }}" class="btn btn-lg btn-secondary">
+                        <i class="fa fa-share-square-o"> DNA Result</i>
+                      </a>
+                      <a href="{{ route('Dog.create') }}" class="btn btn-lg btn-success">
+                       <i class="fa fa-plus-circle"> New</i>
+                      </a>
+                    </div>
                   </h5>
-                  <a href="{{ route('Dog.create') }}" class="btn btn-lg btn-success">
-                   <i class="fa fa-plus-circle"> New</i>
-                  </a>
-                  <a href="{{ url('/DNAResults') }}" class="btn btn-lg btn-secondary">
-                    <i class="fa fa-share-square-o"> DNA Result</i>
-                   </a>
-                  <p></p>
+                  
                   @if ($message = Session::get('success'))
-                  <p></p>
                     <div class="alert alert-success" id="msg">
                         <p>{{ $message }}</p>
                     </div>
@@ -41,36 +37,69 @@ Dogs </h5>
                     </div>
                   @endif
                   <div class="table-responsive">
-                    <table id="dataTable1" width="100%" class="table table-striped table-bordered table-lightfont">
-                      <thead>
+                    <form action="{{ URL::to('/Dog/search') }}" method="POST" id="formValidate">
+                    @csrf
+                    <table id="dataTable1" width="100%" class="table table-sm table-hover table-bordered table-lightfont">
+                      <thead class="thead-light">
                         <tr>
-                          <th>S #</th>
-                          <th>Dog Name</th>
-                          <th>Sex</th>
-                          <th>Microchip</th>
-                          <th>KP</th>
+                          <th></th>
+                          <th><input type="text" class="form-control"  name="dog_name"></th>
                           <th>
-                            <select id="breed_survey" name="search[breed_survey]">
+                            <select id="sex" name="sex">
+                              <option value="">- Select Sex -</option>
+                              <option value="Female">Female</option>
+                              <option value="Male">Male</option>
+                            </select>
+                          </th>
+                          <th><input type="text" class="form-control" name="microchip"></th>
+                          <th><input type="text" class="form-control" name="KP"></th>
+                          <th>
+                            <select id="breed_survey_done" name="breed_survey_done">
                               <option value="">- Select Breed Survey -</option>
-                               <option value="Proven">Done</option>
-                               <option value="Stored">Not Done</option>
+                              <option value="1">Done</option>
+                              <option value="0">Not Done</option>
                             </select>
                           </th>
                           <th>
-                            <select id="DNA_status" name="search[DNA_status]">
-                              <option value="">- Select DNA Status -</option>
-                               <option value="">Proven</option>
-                               <option value="">Stored</option>
-                               <option value="">Repeat</option>
-                               <option value="">Applied For</option>
-                               <option value="">Not Available</option>
-                               <option value="">Not Proven</option>
+                            <select name="DNA_status" id="DNA_status">
+                              <option value="">- Select One -</option>
+                              <option>Proven</option>
+                              <option>Stored</option>
+                              <option>Repeat</option>
+                              <option>Applied For</option>
+                              <option>Not Availabe</option>
+                              <option>Not Proven</option>
                             </select>
                           </th>
-                          <th>Status</th>
-                          <th>Owners</th>
-                          <th>Owener Info</th>
-                          <th>Actions</th>
+                          <th>
+                            <select id="status" name="status">
+                              <option value="">- Select Status -</option>
+                              <option>Active</option>
+                              <option>Inactive</option>
+                              <option>Deleted</option>
+                            </select>
+                          </th>
+                          <th><input type="text" class="form-control" name="owners"></th>
+                          <th><input type="text" class="form-control" name="owner_info" style="width:  100px"></th>
+                          <th>
+                            <button class="btn btn-warning" type="submit">
+                              <i class="fa fa-search"> </i><span> Search</span>
+                            </button>
+                          </th>
+                        </tr>
+                    </form>
+                        <tr>
+                          <th class="text-primary">S.no</th>
+                          <th class="text-primary">Dog Name</th>
+                          <th class="text-primary">Sex</th>
+                          <th class="text-primary">Microchip</th>
+                          <th class="text-primary">KP</th>
+                          <th class="text-primary">Breed Survey</th>
+                          <th class="text-primary">DNA Status</th>
+                          <th class="text-primary">Status</th>
+                          <th class="text-primary">Owners</th>
+                          <th class="text-primary" style="width:  12.33%">Owner Info</th>
+                          <th class="text-primary">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -85,13 +114,40 @@ Dogs </h5>
                             <td>{{ $dogs->microchip }}</td>
                             <td>{{ $dogs->KP }}</td>
                             <td style="text-align:center">
-                              <span class="btn btn-danger" href="#"><i class="fa fa-times"></i></span>
+                              @if($dogs->breed_survey_done == '0')
+                                <span class="btn btn-danger"><i class="fa fa-times"></i></span>
+                              @else
+                                <span class="btn btn-secondary">{{ $dogs->survey_date_from.' - '.$dogs->survey_date_to }}</span><br>
+                                <span class="btn btn-success"><i class="fa fa-check"></i></span>
+                              @endif
                             </td>
                             <td>{{ $dogs->DNA_status }}</td>
-                            <td><span class="badge badge-success">{{ $dogs->status }}</span></td>
-                            <td>{{ $dogs->microchip }}</td>
-                            <td>{{ $created=date('d-m-Y h:i:s', strtotime($dogs->created_at)) }}</td>
-
+                            <td>
+                              @if($dogs->status == 'Active')
+                                <span class="badge badge-success">{{ $dogs->status }}</span>
+                              @elseif($dogs->status == 'Inactive')
+                                <span class="badge badge-warning">{{ $dogs->status }}</span>
+                              @else
+                                <span class="badge badge-danger">{{ $dogs->status }}</span>
+                              @endif
+                            </td>
+                            <td>
+                              <?php
+                              global $owner_name;
+                              global $owner_info;
+                              if(isset($dogs->dog_owners[0])){
+                                  if($dogs->dog_owners[0]->owner_id == NULL){
+                                    $owner_name = "";
+                                    $owner_info = "";
+                                  }else{
+                                    $owner_name = $dogs->dog_owners[0]->owners->first_name.' '.$dogs->dog_owners[0]->owners->last_name;
+                                    $owner_info = $dogs->dog_owners[0]->owners->user_city->city.' '.$dogs->dog_owners[0]->owners->phone;
+                                  }
+                                }
+                              ?>
+                              {{ $dogs->OwnerName ?? $owner_name }}
+                            </td>
+                            <td>{{ $dogs->OwnerInfo ?? $owner_info }}</td>
                             <td>
                               <div class="row-actions">
                               <div class="btn-group" role="group" aria-label="Basic example">
@@ -108,13 +164,14 @@ Dogs </h5>
                               <a onclick="test({{$dogs->id}})" data-toggle="tooltip" data-placement="top"
                               title="Print"><i class="fa fa-print"></i></a>
                               <a class="danger pointer" onclick="deleteData({{$dogs->id}})" type="submit" data-id="{{$dogs->id}}" data-toggle="tooltip" data-placement="top"
-                                  title="Delete"><i class="os-icon os-icon-ui-15"></i></a>
+                              title="Delete"><i class="os-icon os-icon-ui-15"></i></a>
                               </div>
                               </div>
                             </td>
                           </tr>
                         @endforeach 
                       </tbody>
+
                       </table>
                   </div>
                 </div>
@@ -126,7 +183,6 @@ Dogs </h5>
 <script src="https://cdn.jsdelivr.net/gh/xxjapp/xdialog@3/xdialog.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
-    // document.getElementById('test').addEventListener('click', test);
 
     function test(id) {
       xdialog.confirm('Select page type', function() {

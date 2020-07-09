@@ -2,9 +2,9 @@
 
 @section('content')
 
-<script type="text/javascript" src="{{asset('assets/dogs/js_gal/jquery.jcarousel.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/dogs/js_gal/jquery.pikachoose.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/dogs/js_gal/jquery.touchwipe.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('dogs/js_gal/jquery.jcarousel.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('dogs/js_gal/jquery.pikachoose.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('dogs/js_gal/jquery.touchwipe.min.js')}}"></script>
 
 <link href="http://gsdcp.org/db/assets/admin/css/bootstrap.css" rel="stylesheet" type="text/css" />
 <link href="http://gsdcp.org/db/assets/admin/css/custom_styles.css" rel="stylesheet" type="text/css" />      
@@ -34,8 +34,13 @@ Dogs Pedigree
 <div class="row-fluid">
 <div class="span12">
 <h1 class="main-heading"><span class="dog-prefix"></span>
-Sabria vom Marble <img src="http://gsdcp.org/db/application/views/admin/dogs/asset/female.png" alt="Female">
-</h1>
+{{ $dog->dog_name }} 
+  @if ($dog->sex === 'Male')
+    <img src="{{asset('dogs/male.png')}}" alt="Male">
+  @else
+    <img src="{{asset('dogs/female.png')}}" alt="Female">
+  @endif</h1>
+
 </div>
 </div>
 <div class="row-fluid">
@@ -48,14 +53,16 @@ Sabria vom Marble <img src="http://gsdcp.org/db/application/views/admin/dogs/ass
 <div class="dna-not-available"></div>
 <div class="row-fluid">
 <div class="col-sm-12">
-<strong>Reg Number:</strong> KP 80465 <br />
-<strong>Whelped:</strong> January 15, 2020 <br />
-<strong>DNA Status:</strong> Not Available <br />
-<strong>Microchip / Tattoo No:</strong> 985141000913933 <br />
-<strong>HD / ED:</strong> - / -<br />
+
+<strong>Reg Number:</strong> KP {{$dog->KP}} <br />
+<strong>Whelped:</strong> {{$whelped = date('F d, Y', strtotime($dog->dob))}} <br />
+<strong>DNA Status:</strong> {{$dog->DNA_status}} <br />
+<strong>Microchip / Tattoo No:</strong> {{$dog->microchip}} <br />
+<strong>HD / ED:</strong> {{$dog->hip}} / {{$dog->elbows}}<br />
 </div>
 </div>
-<strong>Owner(s): </strong> <a href="http://gsdcp.org/db/members/profile/46">Nadeem Ahmed</a><br />
+<strong>Owner(s): </strong> <a href="http://gsdcp.org/db/members/profile/46">{{$dog->owner_id}}</a><br />
+
 </div>
 </div>
 <br />

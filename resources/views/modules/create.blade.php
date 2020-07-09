@@ -7,18 +7,21 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Module - Form
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+         &nbsp; Module - Form
       </h6>
       @if (count($errors) > 0)
-        <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-            </ul>
-        </div>
-      @endif
+    <div class="alert alert-danger">
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+        </ul>
+    </div>
+@endif
 
       <div class="element-box">
         <form action="{{ route('Modules.store')}}" method="post">

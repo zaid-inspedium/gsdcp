@@ -2,6 +2,8 @@
 <style type="text/css">
 .pointer {cursor: pointer;}
 </style>
+<link href="https://cdn.jsdelivr.net/gh/xxjapp/xdialog@3/xdialog.min.css" rel="stylesheet"/>
+<link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @section('content')
   <div class="content-i">
     <div class="content-box">
@@ -28,25 +30,27 @@
               <p>{{ $message }}</p>
           </div>
         @endif
-          <div class="form-desc">
-            <!-- <a href="https://www.datatables.net/" target="_blank">Learn More about DataTables</a> -->
-          </div>
           <div class="table-responsive">
-            <table id="dataTable1" width="100%" class="table table-striped table-bordered table-lightfont">
+            <form action="{{ URL::to('/roles/search') }}" method="POST" id="formValidate">
+            @csrf
+            <table id="dataTable1" width="100%" class="table table-sm table-striped table-bordered table-lightfont">
             	<thead>
+                <tr>
+                  <th></th>
+                  <th><input type="text" class="form-control" name="role"></th>
+                  <th>
+                    <button class="btn btn-warning" type="submit">
+                      <i class="fa fa-search"> </i><span> Search</span>
+                    </button>
+                  </th>
+                </tr>
+              </form>
             		<tr>
-            			<th style="width:  4.33%">S.no</th>
-            			<th>Role</th>
-                        <th>Actions</th>
+            			<th class="text-primary" style="width:  4.33%">S.no</th>
+            			<th class="text-primary">Role</th>
+                  <th class="text-primary">Actions</th>
             		</tr>
             	</thead>
-            	<tfoot>
-            		<tr>
-            			<th style="width:  4.33%">S.no</th>
-            			<th>Role</th>
-                        <th>Actions</th>
-            		</tr>
-            	</tfoot>
             	<tbody>
             		<?php
       					 $i = 1;
@@ -60,13 +64,11 @@
                     <td class="row-actions">
                       <a href="{{ route('roles.edit',$role->id) }}" data-toggle="tooltip" data-placement="top"
                           title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
+                      <a href="{{ route('roles.show',$role->id) }}" data-toggle="tooltip" data-placement="top"
+                          title="View"><i class="fa fa-eye"></i></a>
+                      <a class="danger pointer" onclick="deleteData({{$role->id}})" type="submit" data-id="{{$role->id}}" data-toggle="tooltip" data-placement="top"
+                          title="Delete"><i class="os-icon os-icon-ui-15"></i></a>
 
-                          <a class="btn btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
-                          {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-                          {{ Form::button('<i class="os-icon os-icon-ui-15"></i>', ['type' => 'submit', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => 'Delete'] )  }}
-                          {!! Form::close() !!}
-
-                    
                     </td>
                 	</tr>
             		@endforeach 
@@ -78,7 +80,7 @@
       </div>
     </div>
   </div>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
     function deleteData(id){
         swal({
@@ -91,14 +93,14 @@
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url : "{{ url('/destroy')}}" + '/' + id,
+                    url : "{{ url('/roleStatusUpdate')}}" + '/' + id,
                     type : "GET",
-                    data : {'_method' : 'DELETE'},
+                    data : {'_method' : 'PUT'},
                     success: function(data){
                         swal("Done! Record successfully deleted!", {
                         icon: "success",
                         }).then(function() {
-                            window.location = "KCPNumber";
+                            window.location = "roles";
                         });
                     },
                     error : function(){

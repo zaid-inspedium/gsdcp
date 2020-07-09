@@ -23,7 +23,7 @@ class StudCertificateController extends Controller
          $this->middleware('permission:stud-list');
          $this->middleware('permission:stud-create', ['only' => ['create','store']]);
          $this->middleware('permission:stud-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:stud-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:stud-delete', ['only' => ['update_status']]);
     }
 
 
@@ -420,5 +420,14 @@ class StudCertificateController extends Controller
     public function destroy($id)
     {
         
+    }
+
+    public function update_status($id)
+    {
+        $certificates = StudCertificate::findOrFail($id);
+        // $certificates->status = 'Unused';
+        $certificates->is_delete = 1;
+        $certificates->update();
+        $this->saveActivity('Stud Certificate Delete',$this->module_name);
     }
 }

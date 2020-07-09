@@ -686,7 +686,7 @@
             </li>
 
             <li class="selected">
-              <a href="/Dogs">
+              <a href="/Dog">
                 <div class="icon-w">
                   <div class="os-icon os-icon-layout"></div>
                 </div>
@@ -778,6 +778,30 @@
                   <div class="os-icon os-icon-layout"></div>
                 </div>
                 <span>Litter Registration</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/Event">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Events</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/judges">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Judges</span></a>
+            </li>
+
+            <li class="selected">
+              <a href="/microchips">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Microchips</span></a>
             </li>
             
 
@@ -1370,6 +1394,18 @@
       
       ga('create', 'UA-XXXXXXX-9', 'auto');
       ga('send', 'pageview');
+    </script>
+    <script>
+      $(document).ready(function(){
+         $("#msg").fadeTo(1500, 500).slideUp(500, function(){
+             $("#msg").slideUp(600);
+           });
+      })
+      $(document).ready(function(){
+       $("#error").fadeTo(1500, 500).slideUp(500, function(){
+           $("#error").slideUp(600);
+         });
+      })
     </script>
   </body>
 </html>

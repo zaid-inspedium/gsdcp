@@ -36,7 +36,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id','DESC')->paginate(20);
+        $roles = Role::where('is_deleted','=','0')->orderBy('id','DESC')->paginate(20);
         $this->saveActivity('Role List',$this->module_name);
         
         return view('roles.index',compact('roles'))
@@ -105,7 +105,7 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::find($id);
-        $permission = Permission::get();
+        $permission = Permission::orderBy('id','DESC')->get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
@@ -156,5 +156,13 @@ class RoleController extends Controller
 
         return redirect()->route('roles.index')
                         ->with('success','Role deleted successfully');
+    }
+
+    public function update_status($id)
+    {
+      $module = Role::findOrFail($id);
+      $module->is_deleted = 1;
+      $module->update();
+      $this->saveActivity('Delete Role',$this->module_name);
     }
 }

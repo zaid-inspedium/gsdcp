@@ -22,7 +22,7 @@ class PermissionController extends Controller
          $this->middleware('permission:permission-list');
          $this->middleware('permission:permission-create', ['only' => ['create','store']]);
          $this->middleware('permission:permission-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:permission-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:permission-delete', ['only' => ['update_status']]);
     }
 
     public function index()
@@ -124,11 +124,19 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        $permissions = Permission::findOrFail($id);
-        $this->saveActivity('Module Action Delete',$this->module_name);
+        // $permissions = Permission::findOrFail($id);
+        // $this->saveActivity('Module Action Delete',$this->module_name);
 
-        $permissions->delete();
-        return redirect()->route('Permission.index')
-            ->with('danger','Record removed successfully');
+        // $permissions->delete();
+        // return redirect()->route('Permission.index')
+        //     ->with('danger','Record removed successfully');
+    }
+
+    public function update_status($id)
+    {
+      $permissions = Permission::findOrFail($id);
+      $permissions->is_deleted = 1;
+      $permissions->update();
+      $this->saveActivity('Permission Module Delete',$this->module_name);
     }
 }

@@ -3,14 +3,14 @@
 @section('content')
 
 
-<script type="text/javascript" src="{{asset('assets/dogs/js_gal/jquery.jcarousel.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/dogs/js_gal/jquery.pikachoose.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/dogs/js_gal/jquery.touchwipe.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('dogs/js_gal/jquery.jcarousel.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('dogs/js_gal/jquery.pikachoose.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('dogs/js_gal/jquery.touchwipe.min.js')}}"></script>
 <link type="text/css" href="http://gsdcp.org/db/application/views/admin/dogs/asset/style_gal/bottom.css" rel="stylesheet">
 
 <!-- <link href="http://gsdcp.org/db/assets/admin/css/bootstrap.css" rel="stylesheet" type="text/css" /> -->
-<link href="{{asset('assets/admin/css/bootstrap.css')}}" rel="stylesheet">
-<link href="{{asset('assets/admin/css/custom_styles.css')}}" rel="stylesheet">
+<link href="{{asset('admin/css/bootstrap.css')}}" rel="stylesheet">
+<link href="{{asset('admin/css/custom_styles.css')}}" rel="stylesheet">
 <!-- <link href="http://gsdcp.org/db/assets/admin/css/custom_styles.css" rel="stylesheet" type="text/css" /> -->
     
       <script language="javascript">
@@ -40,9 +40,9 @@ Dogs Pedigree
 <h1 class="main-heading"><span class="dog-prefix"></span>
 {{ $dog->dog_name }} 
   @if ($dog->sex === 'Male')
-    <img src="{{asset('assets/dogs/male.png')}}" alt="Male">
+    <img src="{{asset('dogs/male.png')}}" alt="Male">
   @else
-    <img src="{{asset('assets/dogs/female.png')}}" alt="Female">
+    <img src="{{asset('dogs/female.png')}}" alt="Female">
   @endif
 
 </h1>
@@ -76,7 +76,7 @@ Dogs Pedigree
 </div>
 <div class="row-fluid">
 <div class="span12">
-<link rel="stylesheet" href="{{asset('assets/dogs/padigree.css')}}">
+<link rel="stylesheet" href="{{asset('dogs/padigree.css')}}">
 <!-- <link rel="stylesheet" href="http://gsdcp.org/db/application/views/admin/dogs/asset/padigree.css" /> -->
 <style>
 

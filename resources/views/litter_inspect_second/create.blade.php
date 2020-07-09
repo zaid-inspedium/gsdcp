@@ -27,7 +27,7 @@
           <div class="form-group">
          
             <legend><span>Inspection Request</span></legend>
-              <select class="form-control select2 selectpicker dynamicinspection" data-live-search="true" id="inspection_id" name="inspection_id" data-dependent="inspection_result">
+              <select class="form-control select2 selectpicker dynamicinspection" data-live-search="true" id="inspection_id" name="inspection_id" data-dependent="inspection_result" required>
                 <option>- Select Inspection Request -</option>
                 @foreach($littersinspection as $inspection)
                     <option value="{{$inspection->id}}">{{ $inspection->sire_dog->dog_name }} - {{ $inspection->dam_dog->dog_name }}</option>
@@ -44,7 +44,7 @@
         <div class="col-sm-12">
         <div class="form-group">
           <legend><span>Condition of Dam</span></legend>
-        <textarea class="form-control" name="dam_condition"></textarea>
+        <textarea class="form-control" name="dam_condition" required></textarea>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@
 
       <div class="form-group">
         <legend><span>Condition of Puppies</span></legend>
-      <textarea class="form-control" name="puppies_condition"></textarea>
+      <textarea class="form-control" name="puppies_condition" required></textarea>
         </div>
       <div class="row">
       <div class="col-sm-6">
@@ -185,7 +185,7 @@
       <div class="col-sm-6">
         <div class="form-group">
           <label>Remarks</label>
-        <textarea class="form-control" name="remarks"></textarea>
+        <textarea class="form-control" name="remarks" required></textarea>
         </div>
         </div>
       </div>

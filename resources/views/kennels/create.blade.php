@@ -7,7 +7,10 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Kennels - Form
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+        &nbsp; Kennels - Form
       </h6>
       <div class="element-box">
         <form action="{{ route('Kennels.store') }}" method="POST" id="formValidate">
@@ -19,7 +22,7 @@
             <label for="">Owner<span class="req" style="color:red;">*</span></label>
 
 
-          <select class="form-control" id="owner" name="owner_id" required>
+          <select class="form-control select2" id="owner" name="owner_id" required>
               <option value="0">
                 Select Owner
               </option>

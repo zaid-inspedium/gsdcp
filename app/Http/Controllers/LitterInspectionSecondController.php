@@ -15,6 +15,14 @@ class LitterInspectionSecondController extends Controller
     use UserActivityLog;
     public $module_name = "litter_inspection_second";
 
+    function __construct()
+    {
+         $this->middleware('permission:litter_inspection_second-list', ['only' => ['index']]);
+         $this->middleware('permission:litter_inspection_second-create', ['only' => ['create','store']]);
+         $this->middleware('permission:litter_inspection_second-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:litter_inspection_second-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -180,7 +188,10 @@ class LitterInspectionSecondController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        LitterInspectionSecond::create($request->all());
+        $this->saveActivity('Second Litter Inspection',$this->module_name,"Create new record");
+        return redirect()->route('SecondLitterInspections.index')
+                        ->with('success','Record created successfully.');
     }
 
     /**

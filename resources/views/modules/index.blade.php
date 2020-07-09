@@ -2,6 +2,8 @@
 <style type="text/css">
 .pointer {cursor: pointer;}
 </style>
+<link href="https://cdn.jsdelivr.net/gh/xxjapp/xdialog@3/xdialog.min.css" rel="stylesheet"/>
+<link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @section('content')
   <div class="content-i">
     <div class="content-box">
@@ -12,10 +14,13 @@
         <div class="element-box">
           <h5 class="form-header">
             Modules - List
+            <div style="float: right; position: inherit;">
+              <a href="{{ route('Modules.create') }}" class="btn btn-lg btn-success">
+               <i class="fa fa-plus-circle"> New</i>
+              </a>
+            </div>
           </h5>
-        <a href="{{ route('Modules.create') }}" class="btn btn-lg btn-success">
-			   <i class="fa fa-plus-circle"> New</i>
-		    </a>
+
         @if ($message = Session::get('success'))
         <p></p>
           <div class="alert alert-success" id="msg">
@@ -30,25 +35,15 @@
             <!-- <a href="https://www.datatables.net/" target="_blank">Learn More about DataTables</a> -->
           </div>
           <div class="table-responsive">
-            <table id="dataTable1" width="100%" class="table table-striped table-bordered table-lightfont">
+            <table id="dataTable1" width="100%" class="table table-sm table-striped table-bordered table-lightfont">
             	<thead>
             		<tr>
-            			<th style="width:  4.33%">S.no</th>
-            			<th>Module</th>
-            			<th>Module Title</th>
-                        
-                        <th>Actions</th>
+            			<th class="text-primary" style="width: 4.33%">S.no</th>
+            			<th class="text-primary">Module</th>
+            			<th class="text-primary">Module Title</th>
+                  <th class="text-primary">Actions</th>
             		</tr>
             	</thead>
-            	<tfoot>
-            		<tr>
-            			<th style="width:  4.33%">S.no</th>
-            			<th>Module</th>
-            			<th>Module Title</th>
-                        
-                        <th>Actions</th>
-            		</tr>
-            	</tfoot>
             	<tbody>
             		<?php
       					 $i = 1;
@@ -62,12 +57,8 @@
                     <td class="row-actions">
                       <a href="{{ route('Modules.edit',$mod->id) }}" data-toggle="tooltip" data-placement="top"
                           title="Edit"><i class="os-icon os-icon-ui-49"></i></a>
-
-
-                          {!! Form::open(['method' => 'DELETE','route' => ['Modules.destroy', $mod->id],'style'=>'display:inline']) !!}
-                          {{ Form::button('<i class="os-icon os-icon-ui-15"></i>', ['type' => 'submit', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => 'Delete'] )  }}
-                          {!! Form::close() !!}
-
+                      <a class="danger pointer" onclick="deleteData({{$mod->id}})" type="submit" data-id="{{$mod->id}}" data-toggle="tooltip" data-placement="top"
+                          title="Delete"><i class="os-icon os-icon-ui-15"></i></a>
                     
                     </td>
                 	</tr>
@@ -81,8 +72,9 @@
     </div>
   </div>
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
-    function deleteData(id){
+function deleteData(id){
         swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this record!",
@@ -93,14 +85,14 @@
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    url : "{{ url('/destroy')}}" + '/' + id,
+                  url : "{{ url('/ModulesStatusUpdate')}}" + '/' + id,
                     type : "GET",
-                    data : {'_method' : 'DELETE'},
+                    data : {'_method' : 'PUT'},
                     success: function(data){
                         swal("Done! Record successfully deleted!", {
                         icon: "success",
                         }).then(function() {
-                            window.location = "KCPNumber";
+                            window.location = "Modules";
                         });
                     },
                     error : function(){

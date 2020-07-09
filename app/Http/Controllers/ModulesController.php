@@ -21,12 +21,12 @@ class ModulesController extends Controller
          $this->middleware('permission:module-list');
          $this->middleware('permission:module-create', ['only' => ['create','store']]);
          $this->middleware('permission:module-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:module-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:module-delete', ['only' => ['update_status']]);
     }
     
     public function index()
     {
-        $modules = Modules::orderBy('id', 'DESC')->get();
+        $modules = Modules::where('status','=','1')->orderBy('id', 'DESC')->get();
         $this->saveActivity('Modules List',$this->module_name);
 
         return view('modules.index',compact('modules'));
@@ -102,7 +102,7 @@ class ModulesController extends Controller
         $module->update($request->all());
         $this->saveActivity('Update Module',$this->module_name);
 
-        return redirect()->route('Module.index')
+        return redirect()->route('Modules.index')
             ->with('success','Record updated successfully');
     }
 
@@ -114,11 +114,21 @@ class ModulesController extends Controller
      */
     public function destroy($id)
     {
-        $module = Modules::findOrFail($id);
-        $module->delete();
-        $this->saveActivity('Delete Module',$this->module_name);
+        // $module = Modules::findOrFail($id);
+        // $module->delete();
+        // $this->saveActivity('Delete Module',$this->module_name);
 
-        return redirect()->route('Modules.index')
-            ->with('danger','Record removed successfully');
+        // return redirect()->route('Modules.index')
+        //     ->with('danger','Record removed successfully');
+    }
+
+    public function update_status($id)
+    {
+      $module = Modules::findOrFail($id);
+      $module->status = 0;
+      $module->update();
+      $this->saveActivity('Delete Module',$this->module_name);
+    //   return redirect()->route('Modules.index')
+    //     ->with('danger','Record removed successfully');
     }
 }

@@ -13,12 +13,16 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Dogs - Form
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+        &ensp;Dogs - Form
       </h6>
 
       <div class="element-box">
         <form action="{{ route('Dog.store') }}" method="POST" id="formValidate" enctype="multipart/form-data">
         @csrf
+        
           <legend><span><button onclick="myFunction()" class="btn btn-primary mr-2 inline-block" type="button">Dog Entry</button></span></legend>
         <div class="container" id="myDIV">
 
@@ -203,7 +207,7 @@
             <div class="col-sm-2"></div>
             <label class="col-form-label col-sm-2 h6"> Owner</label>
             <div class="col-sm-3">
-              <select class="form-control select2" name="owner_id[]" id="owner_id" style="width: 290px;" multiple="true">
+              <select class="form-control select2" name="owner_id[]" id="owner_id" style="width: 260px;" multiple="true">
                 <option>
                   Select One
                 </option>
@@ -1240,8 +1244,8 @@
           <div class="form-buttons-w">
             <button class="btn btn-primary" type="submit"> Submit</button>
             <button class="btn btn-secondary" type="reset"> Reset</button>
-            <a type="button" href="{{ route('KCPNumber.index') }}" class="btn btn-white">
-              Cancel
+            <a action="back" href="javascript: window.history.back();" class="btn btn-danger">
+              <i class="fa fa-times"> </i><span> &nbsp; Cancel</span>
             </a>
           </div>
         </form>

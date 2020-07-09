@@ -7,7 +7,10 @@
     <div class="content-box">
       <div class="element-wrapper">
         <h6 class="element-header">
-          KCP Numbers
+          <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+            <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+          </a>
+          &nbsp; KCP Numbers
         </h6>
         <div class="element-box">
           <h5 class="form-header">
@@ -55,28 +58,28 @@
           <div class="form-buttons-w">
           	<button class="btn btn-primary" type="submit"> Submit</button>
           	<button class="btn btn-secondary" type="reset"> Reset</button>
-	        <a type="button" href="{{ route('KCPNumber.index') }}" class="btn btn-danger">
-	          Cancel
-	        </a>
+            <a action="back" href="javascript: window.history.back();" class="btn btn-danger">
+              <i class="fa fa-times"> </i><span> &nbsp; Cancel</span>
+            </a>
           </div>
       	</form>
       </div><!--------------------
       START - Color Scheme Toggler
       -------------------->
-      <div class="floated-colors-btn second-floated-btn">
+      {{-- <div class="floated-colors-btn second-floated-btn">
         <div class="os-toggler-w">
           <div class="os-toggler-i">
             <div class="os-toggler-pill"></div>
           </div>
         </div>
         <span>Dark </span><span>Mode</span>
-      </div>
+      </div> --}}
       <!--------------------
       END - Color Scheme Toggler
       --------------------><!--------------------
       START - Demo Customizer
       -------------------->
-      <div class="floated-customizer-btn third-floated-btn">
+      {{-- <div class="floated-customizer-btn third-floated-btn">
         <div class="icon-w">
           <i class="os-icon os-icon-ui-46"></i>
         </div>
@@ -214,7 +217,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> --}}
       <!--------------------
       END - Demo Customizer
       -------------------->

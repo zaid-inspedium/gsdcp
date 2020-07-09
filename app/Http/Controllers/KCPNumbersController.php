@@ -23,13 +23,13 @@ class KCPNumbersController extends Controller
          $this->middleware('permission:kcpnumbers-list');
          $this->middleware('permission:kcpnumbers-create', ['only' => ['create','store']]);
          $this->middleware('permission:kcpnumbers-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:kcpnumbers-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:kcpnumbers-delete', ['only' => ['update_status']]);
     }
 
     public function index()
     {
         $user = Auth()->user();
-        $kcp_number = KCPNumbers::orderBy('id', 'DESC')->get();
+        $kcp_number = KCPNumbers::where('is_deleted','=','0')->orderBy('id', 'DESC')->get();
         $this->saveActivity('KCPNumbers List',$this->module_name);
 
         return view('kcp_numbers.index',compact('kcp_number','user'));
@@ -116,11 +116,18 @@ class KCPNumbersController extends Controller
      */
     public function destroy($id)
     {
-        $kcp_number = KCPNumbers::findOrFail($id);
-        $kcp_number->delete();
-        $this->saveActivity('Delete KCP Number',$this->module_name);
+        // $kcp_number = KCPNumbers::findOrFail($id);
+        // $kcp_number->delete();
+        // $this->saveActivity('Delete KCP Number',$this->module_name);
 
-        return redirect()->route('KCPNumber.index')
-            ->with('danger','Record removed successfully');
+        // return redirect()->route('KCPNumber.index')
+        //     ->with('danger','Record removed successfully');
+    }
+    public function update_status($id)
+    {
+      $kcp_number = KCPNumbers::findOrFail($id);
+      $kcp_number->is_deleted = 1;
+      $kcp_number->update();
+      $this->saveActivity('Delete KCP Number',$this->module_name);
     }
 }

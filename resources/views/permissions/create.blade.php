@@ -7,19 +7,14 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Create New Module - Action
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+        &nbsp; Create New Module - Action
       </h6>
 
       <div class="element-box">
-        <div class="pull-left">
-            <a class="btn btn-primary" href="{{ route('Permission.index') }}"> Back</a>
-        </div>
         <br>
-        <br>
-        <br>
-        <br>
-    
-
 
 
 @if (count($errors) > 0)
@@ -63,11 +58,6 @@
     </div>
 </div>
 {!! Form::close() !!}
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
+</div></div></div></div></div></div>
 
 @endsection

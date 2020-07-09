@@ -11,10 +11,20 @@ use App\DogImages;
 use App\HipElbows;
 use App\Traits\UserActivityLog;
 use Auth;
-
+use DB;
 
 class DogsController extends Controller
 {
+    use UserActivityLog;
+    public $module_name = "dogs";
+
+    function __construct()
+    {
+         $this->middleware('permission:dogs-list');
+         $this->middleware('permission:dogs-create', ['only' => ['create','store']]);
+         $this->middleware('permission:dogs-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:dogs-delete', ['only' => ['update_status']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -23,6 +33,8 @@ class DogsController extends Controller
     public function index()
     {
       $total_dogs = Dog::where('status', 'Active')->orderBy('id', 'DESC')->paginate(50);
+      $this->saveActivity('Dogs List',$this->module_name);
+
       return view('dogs.index',compact('total_dogs'));
     }
 
@@ -173,6 +185,7 @@ class DogsController extends Controller
           $task4->save();
       }
 
+      $this->saveActivity('New Dog',$this->module_name,"Create new record  ".$request->input('dog_name')." ");
       return redirect()->route('Dogs.index')
           ->with('success','Record added successfully');
     }
@@ -189,11 +202,205 @@ class DogsController extends Controller
         return view('dogs.show',compact('dog'));
     }
 
-    public function pedigree($id)
-    {
-        $dog = Dog::findorFail($id);
-        return view('dogs.pedigree',compact('dog'));
-    }
+        public function pedigree($id){
+            $dogs = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '$id'"));
+            $owner = DB::select(DB::raw("SELECT * FROM dog_owners
+                LEFT JOIN users ON users.id = dog_owners.owner_id WHERE dog_owners.dog_id = '".$dogs[0]->id."' "));
+        
+            if(!empty($dogs)){
+        //parents
+        $dogs1sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs[0]->sire."' "));
+        $dogs1dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs[0]->dam."' "));
+        $gen1 = array(
+            'father' => $dogs1sire,
+            'mother' => $dogs1dam
+        );
+        }
+        if(!empty($gen1)){
+        //parents of father
+        $dogs2sire1sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs1sire[0]->sire."' "));
+        $dogs2dam1sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs1sire[0]->dam."' "));
+        //parents of mother
+        $dogs2sire1dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs1dam[0]->sire."' "));
+        $dogs2dam1dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs1dam[0]->dam."' "));
+        $gen2 = array(
+            'gfather1' => $dogs2sire1sire,
+            'gmother1' => $dogs2dam1sire,
+            'gfather2' => $dogs2sire1dam,
+            'gmother2' => $dogs2dam1dam
+        );
+        }
+        if(!empty($gen2)){
+        //parents of grand dad 1
+        $dogs13sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2sire1sire[0]->sire."' "));
+        $dogs13dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2sire1sire[0]->dam."' "));
+        //parents of grand dad 2
+        $dogs23sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2sire1dam[0]->sire."' "));
+        $dogs23dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2sire1dam[0]->dam."' "));
+        //parents of grand mother 1
+        $dogs13sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2dam1sire[0]->sire."' "));
+        $dogs13dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2dam1sire[0]->dam."' "));
+        //parents of grand mother 2
+        $dogs23sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2dam1dam[0]->sire."' "));
+        $dogs23dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs2dam1dam[0]->dam."' "));
+        $gen3 = array(
+            'ggfather1' => $dogs13sire2sire,
+            'ggmother1' => $dogs13dam2sire,
+            'ggfather2' => $dogs23sire2sire,
+            'ggmother2' => $dogs23dam2sire,
+            'ggfather3' => $dogs13sire2dam,
+            'ggmother3' => $dogs13dam2dam,
+            'ggfather4' => $dogs23sire2dam,
+            'ggmother4' => $dogs23dam2dam
+        );
+        }
+        if(!empty($gen3)){
+        //parents of great grand dad 1
+        $dogs14sire13sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13sire2sire[0]->sire."' "));
+        $dogs14dam13sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13sire2sire[0]->dam."' "));
+        //parents of great grand mom 1
+        $dogs14sire13dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13dam2sire[0]->sire."' "));
+        $dogs14dam13dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13dam2sire[0]->dam."' "));
+        //parents of great grand dad 2
+        $dogs24sire23sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23sire2sire[0]->sire."' "));
+        $dogs24dam23sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23sire2sire[0]->dam."' "));
+        //parents of great grand mom 2
+        $dogs24sire23dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23dam2sire[0]->sire."' "));
+        $dogs24dam23dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23dam2sire[0]->dam."' "));
+        //parents of great grand dad 3
+        $dogs34sire13sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13sire2dam[0]->sire."' "));
+        $dogs34dam13sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13sire2dam[0]->dam."' "));
+        //parents of great grand mom 3
+        $dogs34sire13dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13dam2dam[0]->sire."' "));
+        $dogs34dam13dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs13dam2dam[0]->dam."' "));
+        //parents of great grand dad 4
+        $dogs44sire23sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23sire2dam[0]->sire."' "));
+        $dogs44dam23sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23sire2dam[0]->dam."' "));
+        //parents of great grand mom 4
+        $dogs44sire23dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23dam2dam[0]->sire."' "));
+        $dogs44dam23dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs23dam2dam[0]->dam."' "));
+        $gen4 = array(
+            'gggfather1' => $dogs14sire13sire,
+            'gggmother1' => $dogs14dam13sire,
+            'gggfather2' => $dogs14sire13dam2sire,
+            'gggmother2' => $dogs14dam13dam2sire,
+            'gggfather3' => $dogs24sire23sire2sire,
+            'gggmother3' => $dogs24dam23sire2sire,
+            'gggfather4' => $dogs24sire23dam2sire,
+            'gggmother4' => $dogs24dam23dam2sire,
+            'gggfather5' => $dogs34sire13sire2dam,
+            'gggmother5' => $dogs34dam13sire2dam,
+            'gggfather6' => $dogs34sire13dam2dam,
+            'gggmother6' => $dogs34dam13dam2dam,
+            'gggfather7' => $dogs44sire23sire2dam,
+            'gggmother7' => $dogs44dam23sire2dam,
+            'gggfather8' => $dogs44sire23dam2dam,
+            'gggmother8' => $dogs44dam23dam2dam
+        );
+        }
+        if(!empty($gen4)){
+        //parents of great great grand dad 11
+        $dogs15sire14sire13sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14sire13sire[0]->sire."' "));
+        $dogs15dam14sire13sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14sire13sire[0]->dam."' "));
+        //parents of great great grand mom 11
+        $dogs15sire14dam13sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14dam13sire[0]->sire."' "));
+        $dogs15dam14dam13sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14dam13sire[0]->dam."' "));
+        //parents of great great grand dad 12
+        $dogs15sire14sire13dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14sire13dam2sire[0]->sire."' "));
+        $dogs15dam14sire13dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14sire13dam2sire[0]->dam."' "));
+        //parents of great great grand mom 12
+        $dogs15sire14dam13dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14dam13dam2sire[0]->sire."' "));
+        $dogs15dam14dam13dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs14dam13dam2sire[0]->dam."' "));
+        //parents of great great grand dad 21
+        $dogs25sire24sire23sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24sire23sire2sire[0]->sire."' "));
+        $dogs25dam24sire23sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24sire23sire2sire[0]->dam."' "));
+        //parents of great great grand mom 21
+        $dogs25sire24dam23sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24dam23sire2sire[0]->sire."' "));
+        $dogs25dam24dam23sire2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24dam23sire2sire[0]->dam."' "));
+        //parents of great great grand dad 22
+        $dogs25sire24sire23dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24sire23dam2sire[0]->sire."' "));
+        $dogs25dam24sire23dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24sire23dam2sire[0]->dam."' "));
+        //parents of great great grand mom 22
+        $dogs25sire24dam23dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24dam23dam2sire[0]->sire."' "));
+        $dogs25dam24dam23dam2sire = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs24dam23dam2sire[0]->dam."' "));
+        //parents of great great grand dad 31
+        $dogs35sire34sire13sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34sire13sire2dam[0]->sire."' "));
+        $dogs35dam34sire13sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34sire13sire2dam[0]->dam."' "));
+        //parents of great great grand mom 31
+        $dogs35sire34dam13sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34dam13sire2dam[0]->sire."' "));
+        $dogs35dam34dam13sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34dam13sire2dam[0]->dam."' "));
+        //parents of great great grand dad 32
+        $dogs35sire34sire13dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34sire13dam2dam[0]->sire."' "));
+        $dogs35dam34sire13dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34sire13dam2dam[0]->dam."' "));
+        //parents of great great grand mom 32
+        $dogs35sire34dam13dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34dam13dam2dam[0]->sire."' "));
+        $dogs35dam34dam13dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs34dam13dam2dam[0]->dam."' "));
+        //parents of great great grand dad 41
+        $dogs45sire44sire23sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44sire23sire2dam[0]->sire."' "));
+        $dogs45dam44sire23sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44sire23sire2dam[0]->dam."' "));
+        //parents of great great grand mom 41
+        $dogs45sire44dam23sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44dam23sire2dam[0]->sire."' "));
+        $dogs45dam44dam23sire2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44dam23sire2dam[0]->dam."' "));
+        //parents of great great grand dad 42
+        $dogs45sire44sire23dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44sire23dam2dam[0]->sire."' "));
+        $dogs45dam44sire23dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44sire23dam2dam[0]->dam."' "));
+        //parents of great great grand mom 42
+        $dogs45sire44dam23dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44dam23dam2dam[0]->sire."' "));
+        $dogs45dam44dam23dam2dam = DB::select(DB::raw("SELECT * FROM dogs WHERE id = '".$dogs44dam23dam2dam[0]->dam."' "));
+        $gen5 = array(
+            'ggggfather1' => $dogs15sire14sire13sire,
+            'ggggmother1' => $dogs15dam14sire13sire,
+            'ggggfather2' => $dogs15sire14dam13sire,
+            'ggggmother2' => $dogs15dam14dam13sire,
+            'ggggfather3' => $dogs15sire14sire13dam2sire,
+            'ggggmother3' => $dogs15dam14sire13dam2sire,
+            'ggggfather4' => $dogs15sire14dam13dam2sire,
+            'ggggmother4' => $dogs15dam14dam13dam2sire,
+            'ggggfather5' => $dogs25sire24sire23sire2sire,
+            'ggggmother5' => $dogs25dam24sire23sire2sire,
+            'ggggfather6' => $dogs25sire24dam23sire2sire,
+            'ggggmother6' => $dogs25dam24dam23sire2sire,
+            'ggggfather7' => $dogs25sire24sire23dam2sire,
+            'ggggmother7' => $dogs25dam24sire23dam2sire,
+            'ggggfather8' => $dogs25sire24dam23dam2sire,
+            'ggggmother8' => $dogs25dam24dam23dam2sire,
+            'ggggfather9' => $dogs35sire34sire13sire2dam,
+            'ggggmother9' => $dogs35dam34sire13sire2dam,
+            'ggggfather10' => $dogs35sire34dam13sire2dam,
+            'ggggmother10' => $dogs35dam34dam13sire2dam,
+            'ggggfather11' => $dogs35sire34sire13dam2dam,
+            'ggggmother11' => $dogs35dam34sire13dam2dam,
+            'ggggfather12' => $dogs35sire34dam13dam2dam,
+            'ggggmother12' => $dogs35dam34dam13dam2dam,
+            'ggggfather13' => $dogs45sire44sire23sire2dam,
+            'ggggmother13' => $dogs45dam44sire23sire2dam,
+            'ggggfather14' => $dogs45sire44dam23sire2dam,
+            'ggggmother14' => $dogs45dam44dam23sire2dam,
+            'ggggfather15' => $dogs45sire44sire23dam2dam,
+            'ggggmother15' => $dogs45dam44sire23dam2dam,
+            'ggggfather16' => $dogs45sire44dam23dam2dam,
+            'ggggmother16' => $dogs45dam44dam23dam2dam
+        );
+        }
+        if(!empty($gen1) && !empty($gen2) && !empty($gen3) && !empty($gen4) && !empty($gen5)){
+        return view('dogs.generation', compact('dogs','owner','gen1', 'gen2','gen3','gen4','gen5'));
+        }elseif(!empty($gen1) && !empty($gen2) && !empty($gen3) && !empty($gen4) && empty($gen5)){
+        return view('dogs.generation', compact('dogs','owner','gen1', 'gen2','gen3','gen4','gen5'));
+        }elseif(!empty($gen1) && !empty($gen2) && !empty($gen3) && empty($gen4)){
+        return view('dogs.generation', compact('dogs','owner','gen1', 'gen2','gen3','gen4'));
+        }elseif(!empty($gen1) && !empty($gen2) && empty($gen3)){
+        return view('dogs.generation', compact('dogs','owner','gen1', 'gen2','gen3'));
+        }elseif(!empty($gen1) && empty($gen2)){
+        return view('dogs.generation', compact('dogs','owner','gen1','gen2'));
+        }elseif(empty($gen1)){
+        return view('dogs.generation', compact('dogs','owner','gen1'));
+        }
+    
+        // $dog = Dog::findorFail($id);
+        // return view('dogs.pedigree',compact('dog'));
+    
+        }
+        
 
     public function progeny($id)
     {
@@ -244,6 +451,7 @@ class DogsController extends Controller
 
         $dog->update($request->all());
 
+        $this->saveActivity('Update Record',$this->module_name);
         return redirect()->route('Dogs.index')
             ->with('success','Record updated successfully');
     }
@@ -264,6 +472,8 @@ class DogsController extends Controller
         $update_dog = Dog::findOrFail($id);
         $update_dog->status = 'Inactive';
         $update_dog->update();
+        $this->saveActivity('Record Delete',$this->module_name);
+
         return redirect()->route('Dog.index')
             ->with('success','Data removed successfully');
     }

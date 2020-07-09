@@ -18,7 +18,11 @@
   <div class="col-lg-12">
     <div class="element-wrapper">
       <h6 class="element-header">
-        Users/Members
+        
+        <a action="back" href="javascript: window.history.back();" class="btn btn-sm btn-secondary">
+          <i class="fa fa-backward"> </i><span> &nbsp; Back</span>
+        </a>
+        &ensp;Users/Members
       </h6>
       <div class="element-box">
         <form action="{{ route('users.store') }}" method="POST" id="formValidate" enctype="multipart/form-data" runat="server">
@@ -158,9 +162,9 @@
           <div class="form-buttons-w">
           	<button class="btn btn-primary" type="submit"> Submit</button>
           	<button class="btn btn-secondary" type="reset"> Reset</button>
-	        <a type="button" href=" {{ route('users.index') }}" class="btn btn-danger">
-	          Cancel
-	        </a>
+            <a action="back" href="javascript: window.history.back();" class="btn btn-danger">
+              <i class="fa fa-times"> </i><span> &nbsp; Cancel</span>
+            </a>
           </div>
           
   </form></div></div></div></div></div></div>  

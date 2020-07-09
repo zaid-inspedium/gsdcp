@@ -25,7 +25,7 @@
       }
     .page1{
         /*background: url("http://localhost/gsdcp/pedigree-outside-72.jpg") no-repeat;*/
-        background: url("{{asset('assets/admin/img/pedigree-outside.jpg')}}") no-repeat;
+        background: url("{{asset('admin/img/pedigree-outside.jpg')}}") no-repeat;
         height: 11.69in;
         background-size: 100% 100%;
             }
