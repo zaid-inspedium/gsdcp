@@ -14,6 +14,9 @@ use App\LitterDetail;
 use App\ProjectSetting;
 use App\DogOwner;
 use App\LitterInspection;
+use App\Microchips;
+use App\LitterInspectionSecond;
+use DB;
 
 class LitterRegistrationController extends Controller
 {
@@ -208,23 +211,65 @@ class LitterRegistrationController extends Controller
         $litters = LitterRegistration::where('status','=','Approved')
                                     ->where('id','=',$id)
                                     ->first();
-        $litter_details = LitterDetail::where('litter_id','=',$litters->id)
+
+        $second_inspection_check = LitterInspectionSecond::where('sire','=',$litters->sire)
+                                    ->where('dam','=',$litters->dam)
+                                    ->where('created_at', '>', (new \Carbon\Carbon)->submonths(5))
+                                    ->count();
+
+        if($second_inspection_check == 0){
+
+            return redirect()
+                    ->route('SecondLitterInspections.create')
+                    ->with('danger','No Second Inspection Found! Please Complete Second Inspection for this Litter first.');
+
+        }else{
+
+            $litter_details = LitterDetail::where('litter_id','=',$litters->id)
                                         ->get();
-        $microchips = ''; 
+            $microchips = Microchips::where('status','=','Instock')->orderBy('microchip','DESC')->get(); 
+            $user = Auth::user();
+            return view('litter_register/assign_microchip', compact('litters','litter_details','microchips','user'));
 
-        $user = Auth::user();
+        }
 
-        // $litters = DB::select(DB::raw("SELECT DISTINCT * FROM litters 
-        //     LEFT JOIN litter_details ON litter_details.litter_id = litters.id
-        //     LEFT JOIN users_old ON users_old.id = litters.owner_id
-        //     WHERE litters.id = '".$id."' "));
+    }
 
-        // $dogs = Dogs::get();
-        // $studs = DB::select(DB::raw("SELECT dam, sire, mating_date FROM stud_certificate"));
-        // $microchips = DB::select(DB::raw("SELECT * FROM microchips WHERE status != 3"));
+    public function save_microchips(Request $request){
+        
+        $puppy_id = $request->detail_id;
+        $puppy_dnatakne = $request->dnataken;
+        $puppy_microchips = $request->microchip;
+        $puppy_hairs = $request->hair;
+        $user_id = Auth::user();
 
-         return view('litter_register/assign_microchip', compact('litters','litter_details','microchips','user'));
+        $keysOne = array_keys($puppy_id);
+        $keysTwo = array_keys($puppy_dnatakne);
+        $keysThree = array_keys($puppy_microchips);
+        $keysFour = array_keys($puppy_hairs);
 
+        $min = min(count($puppy_microchips), count($puppy_hairs));
+
+        for($i = 0; $i < $min; $i++) {
+
+            DB::table('litter_details')
+            ->where('id', $puppy_id[$keysOne[$i]])
+            ->update(['hair' => $puppy_hairs[$keysFour[$i]],
+                    'DNA_taken'=>$puppy_dnatakne[$keysTwo[$i]],
+                    'microchip'=>$puppy_microchips[$keysThree[$i]],
+                    'updated_by'=> $user_id->id
+                    ]);
+
+            DB::table('microchips')
+            ->where('microchip', $puppy_microchips[$keysThree[$i]])
+            ->update(['status' => 'Used'
+                     ]);
+            
+        }
+
+        $this->saveActivity('Microchips Assigned to Puppies',$this->module_name);
+        return redirect()->route('Litters.index')
+                        ->with('success','Record Updated.');
     }
 
     public function fetch_kennel(Request $request){
@@ -339,6 +384,7 @@ class LitterRegistrationController extends Controller
 
         $is_inspected = LitterInspection::where('sire_id','=',$stud)
                                                 ->where('dam_id','=',$value)
+                                                ->where('mating_date', '>', (new \Carbon\Carbon)->submonths(5))
                                                 ->count();
         if($is_inspected == 0){
             $inspection_msg = "Litter Inspection not done. Please request litter inspection first";

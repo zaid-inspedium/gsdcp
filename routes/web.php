@@ -30,6 +30,7 @@ Route::resource('Litters','LitterRegistrationController');
 Route::resource('Event','EventController');
 Route::resource('judges','JudgesController');
 Route::resource('microchips','MicrochipsController');
+Route::resource('ActivityLogs','ActivityLogController');
 
 
 Route::get('/members', function(){
@@ -52,6 +53,7 @@ Route::get('/dynamic_dependent/fetch_sireinfo','LitterRegistrationController@fet
 Route::get('/dynamic_dependent/fetch_daminfo','LitterRegistrationController@fetch_daminfo')->name('dynamicdependent.fetch_daminfo');
 Route::get('/dynamic_dependent/fetch_matingdate','LitterRegistrationController@fetch_matingdate')->name('dynamicdependent.fetch_matingdate');
 Route::get('Assign-Microships/{id}','LitterRegistrationController@microchip');
+Route::POST('Save-Microchips','LitterRegistrationController@save_microchips');
 Route::get('/dynamic_dependent/breeder_info','LitterInspectionController@breeder_info')->name('dynamicdependent.breeder_info');
 Route::get('/dynamic_dependent/breeder_dam','LitterInspectionController@breeder_dam')->name('dynamicdependent.breeder_dam');
 Route::get('/dynamic_dependent/checkcertificate','LitterInspectionController@checkcertificate')->name('dynamicdependent.checkcertificate');

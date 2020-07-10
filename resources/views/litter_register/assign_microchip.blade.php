@@ -123,7 +123,8 @@
             </div>
           </div>
       
-      <form>
+      <form action="{{action('LitterRegistrationController@save_microchips')}}"  method="post">
+        @csrf
           <div class="element-box">
                   <div class="table-responsive">
                     <table id="dataTable" width="100%" class="table table-striped table-lightfont">
@@ -139,18 +140,27 @@
                       </thead>
                       <tbody>
                         @foreach($litter_details as $puppies)
+                      
                         <tr>
-                          <td><span>{{ $puppies->name }}</span></td>
+                        <td><input type="hidden" name="detail_id[]" value="{{ $puppies->id }}"/>
+                          <span>{{ $puppies->name }}</span></td>
                           <td><span>{{ $puppies->sex }}</span></td>
-                          <td><span>{{ $puppies->DNA_taken }}</span></td>
+                          <td> 
+                            <select class="form-control" name="dnataken[]" id="dnataken">
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                            </td>
                           <td>
-                            <select class="form-control">
+                            <select class="form-control" name="microchip[]" id="microchip">
                               <option>- Select One -</option>
-                              
+                              @foreach ($microchips as $microchip)
+                                <option value="{{ $microchip->microchip }}">{{ $microchip->microchip }}</option>
+                              @endforeach
                             </select>
                           </td>
                           <td>
-                            <select class="form-control">
+                            <select class="form-control" name="hair[]" id="hair">
                               <option>- Select One -</option>
                               <option>Stock Hair</option>
                               <option>Long Stock hair</option>

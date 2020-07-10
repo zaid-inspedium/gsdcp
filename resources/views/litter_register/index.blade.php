@@ -24,7 +24,7 @@
                         <p>{{ $message }}</p>
                     </div>
                   @elseif ($message = Session::get('danger'))
-                    <div class="alert alert-danger" id="msg">
+                    <div class="alert alert-danger" id="error">
                         <p>{{ $message }}</p>
                     </div>
                   @endif

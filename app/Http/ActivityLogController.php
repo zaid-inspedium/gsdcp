@@ -4,22 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
-use App\UserActivityLog\saveActivity;
-use App\Traits\UserActivityLog;
 use App\ActivityLog;
+use DB;
+use App\UserActivityLog\saveActivity;
 
 class ActivityLogController extends Controller
 {
-    use UserActivityLog;
-    public $module_name = "activity_logs";
-
-    function __construct()
-    {
-         $this->middleware('permission:activity_logs-list', ['only' => ['index']]);
-        //  $this->middleware('permission:litter_inspection-create', ['only' => ['create','store']]);
-        //  $this->middleware('permission:litter_inspection-edit', ['only' => ['edit','update']]);
-        //  $this->middleware('permission:litter_inspection-delete', ['only' => ['destroy']]);
-    }
+     use UserActivityLog;
     /**
      * Display a listing of the resource.
      *
@@ -27,8 +18,10 @@ class ActivityLogController extends Controller
      */
     public function index()
     {
-        $activity = ActivityLog::orderBy('id','DESC')->get();
-        return view('activity_log.index', compact('activity'));
+        $activity = DB::select(DB::raw("SELECT * FROM activity_log
+            LEFT JOIN users ON users.id = activity_log.user_id
+            LEFT JOIN modules ON modules.id = activity_log.module_id"));
+       return view('activity_log/index', compact('activity'));
     }
 
     /**

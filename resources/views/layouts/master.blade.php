@@ -803,6 +803,14 @@
                 </div>
                 <span>Microchips</span></a>
             </li>
+
+            <li class="selected">
+              <a href="/ActivityLogs">
+                <div class="icon-w">
+                  <div class="os-icon os-icon-layout"></div>
+                </div>
+                <span>Activity Log</span></a>
+            </li>
             
 
             {{-- Previous html template menu --}}
@@ -1402,7 +1410,7 @@
            });
       })
       $(document).ready(function(){
-       $("#error").fadeTo(1500, 500).slideUp(500, function(){
+       $("#error").fadeTo(6000, 500).slideUp(500, function(){
            $("#error").slideUp(600);
          });
       })

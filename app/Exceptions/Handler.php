@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Auth;
 
 class Handler extends ExceptionHandler
 {
@@ -51,7 +52,13 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException) {
-        return response()->json(['User have not permission for this page access.']);
+
+            if(empty(Auth::user())){
+                return redirect()->route('login');
+            }else{
+                return response()->json(['User have not permission for this page access.']);
+            }
+
         }
         return parent::render($request, $exception);
     }
